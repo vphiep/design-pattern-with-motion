@@ -17,9 +17,12 @@ export function CourseSwitcherFab() {
 
   const isDatabase = pathname.startsWith('/database');
   const isJavaCore = pathname.startsWith('/java-core');
+  const isMessaging = pathname.startsWith('/message-queue');
 
-  const accentColor = isJavaCore ? '#e11d48' : isDatabase ? '#0284c7' : '#e85d04';
-  const shadowColor = isJavaCore
+  const accentColor = isMessaging ? '#8b5cf6' : isJavaCore ? '#e11d48' : isDatabase ? '#0284c7' : '#e85d04';
+  const shadowColor = isMessaging
+    ? 'rgba(139, 92, 246, 0.25)'
+    : isJavaCore
     ? 'rgba(225, 29, 72, 0.25)'
     : isDatabase
     ? 'rgba(2, 132, 199, 0.2)'

@@ -48,6 +48,7 @@ export function Nav() {
 
   const isDatabaseCourse = pathname.startsWith('/database');
   const isJavaCoreCourse = pathname.startsWith('/java-core');
+  const isMessagingCourse = pathname.startsWith('/message-queue');
 
   interface NavLinkItem {
     href: string;
@@ -56,6 +57,12 @@ export function Nav() {
   }
 
   // Streamlined, clean navigation links (no overflowing)
+  const messagingNavLinks: NavLinkItem[] = [
+    { href: '/message-queue', label: locale === 'vi' ? 'Tổng quan' : 'Overview' },
+    { href: '/message-queue#curriculum', label: locale === 'vi' ? '20 Bài học' : 'Curriculum' },
+    { href: '/message-queue/playground', label: locale === 'vi' ? 'Lab Phân tán' : 'Live Simulator', isHighlight: true }
+  ];
+
   const javaCoreNavLinks: NavLinkItem[] = [
     { href: '/java-core', label: locale === 'vi' ? 'Tổng quan' : 'Overview' },
     { href: '/java-core/jvm-memory-model', label: 'JVM Memory' },
@@ -77,7 +84,9 @@ export function Nav() {
     { href: '/playground', label: ui.nav.playground }
   ];
 
-  const currentNavLinks = isJavaCoreCourse
+  const currentNavLinks = isMessagingCourse
+    ? messagingNavLinks
+    : isJavaCoreCourse
     ? javaCoreNavLinks
     : isDatabaseCourse
     ? databaseNavLinks
@@ -88,7 +97,22 @@ export function Nav() {
       <div className="mx-auto flex h-14 max-w-wide items-center justify-between gap-6 px-6">
         {/* Brand / Logo */}
         <div className="flex items-center gap-4 shrink-0">
-          {isJavaCoreCourse ? (
+          {isMessagingCourse ? (
+            <Link
+              href="/message-queue"
+              className="group flex items-center gap-2.5"
+              aria-label="Distributed Messaging & Streaming"
+            >
+              <span className="grid h-8 w-8 place-items-center rounded-lg border border-purple-500/40 bg-purple-500/10 text-purple-400 shadow-sm transition-transform group-hover:scale-105">
+                <Layers size={16} strokeWidth={2.2} />
+              </span>
+              <span className="text-display text-base leading-none">
+                <span className="font-bold tracking-tight text-text">Kafka vs RabbitMQ</span>
+                <span className="mx-1.5 text-text-soft">/</span>
+                <span className="font-mono text-xs uppercase tracking-wider text-purple-400">Streaming</span>
+              </span>
+            </Link>
+          ) : isJavaCoreCourse ? (
             <Link
               href="/java-core"
               className="group flex items-center gap-2.5"
@@ -143,7 +167,9 @@ export function Nav() {
                 className={cn(
                   'relative px-3 py-1.5 text-xs font-mono transition-colors duration-200 rounded-md',
                   link.isHighlight
-                    ? isJavaCoreCourse
+                    ? isMessagingCourse
+                      ? 'border border-purple-500/40 bg-purple-500/10 text-purple-400 font-bold hover:bg-purple-500/20'
+                      : isJavaCoreCourse
                       ? 'border border-rose-500/40 bg-rose-500/10 text-rose-500 font-bold hover:bg-rose-500/20'
                       : 'border border-sky-500/40 bg-sky-500/10 text-sky-400 font-bold hover:bg-sky-500/20'
                     : active
@@ -157,7 +183,7 @@ export function Nav() {
                     layoutId="activeNavIndicator"
                     className={cn(
                       'absolute bottom-0 left-3 right-3 h-[2px]',
-                      isJavaCoreCourse ? 'bg-rose-500' : isDatabaseCourse ? 'bg-sky-400' : 'bg-accent'
+                      isMessagingCourse ? 'bg-purple-400' : isJavaCoreCourse ? 'bg-rose-500' : isDatabaseCourse ? 'bg-sky-400' : 'bg-accent'
                     )}
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
@@ -169,7 +195,7 @@ export function Nav() {
 
         {/* Global Toolbar */}
         <div className="flex items-center gap-2 shrink-0">
-          {!isDatabaseCourse && !isJavaCoreCourse && (
+          {!isDatabaseCourse && !isJavaCoreCourse && !isMessagingCourse && (
             <div className="hidden lg:block">
               <ProgressIndicator count={count} total={total} />
             </div>
@@ -178,14 +204,11 @@ export function Nav() {
           <button
             type="button"
             onClick={openSearch}
-            className="flex h-8 items-center gap-2 rounded-lg border border-border-soft bg-surface/60 px-2.5 text-xs text-text-muted transition-colors hover:border-border hover:text-text font-mono"
+            className="grid h-8 w-8 place-items-center rounded-lg border border-border-soft bg-surface/60 text-text-muted transition-colors hover:border-border hover:text-text"
             aria-label={ui.search.placeholder}
+            title={locale === 'vi' ? 'Tìm kiếm (⌘K / Ctrl+K)' : 'Search (⌘K / Ctrl+K)'}
           >
-            <Search size={13} />
-            <span className="hidden sm:inline">{ui.search.placeholder}</span>
-            <kbd className="hidden rounded border border-border-soft bg-bg px-1 py-0.5 text-[10px] text-text-soft sm:inline">
-              ⌘K
-            </kbd>
+            <Search size={15} />
           </button>
 
           <LocaleSwitcher />

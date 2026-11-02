@@ -206,45 +206,49 @@ export const LEARNING_MODULES: LearningModule[] = [
   {
     id: 'message-queue',
     name: 'Message Queues & Streaming',
-    category: { en: 'Distributed Messaging', vi: 'Hàng đợi & Phân tán' },
+    category: { en: 'Distributed Messaging & Streaming', vi: 'Hạ tầng Hàng đợi & Streaming Phân tán' },
     tagline: {
-      en: 'Kafka partition rebalancing, consumer offsets, RabbitMQ topic exchanges and backpressure handling.',
-      vi: 'Phân vùng Kafka, nhóm tiêu thụ, sàn giao dịch RabbitMQ và cơ chế giảm tải backpressure.'
+      en: 'Distributed systems invariants: Apache Kafka vs RabbitMQ, delivery semantics, partition rebalance, and backpressure.',
+      vi: 'Giải quyết các bài toán phân tán: Apache Kafka vs RabbitMQ, ngữ nghĩa phân phát tin, tái cân bằng partition và áp suất ngược.'
     },
     description: {
-      en: 'Follow packet tokens through brokers, understand at-least-once vs exactly-once semantics, and dead-letter queues.',
-      vi: 'Theo dõi gói tin qua broker, hiểu rõ ngữ nghĩa at-least-once, exactly-once và chính sách hàng đợi chết (DLQ).'
+      en: 'Master core distributed systems challenges: temporal decoupling, at-least-once vs exactly-once semantics, dead-letter exchanges, Kafka log partitioning, batching LZ4, cooperative sticky rebalancing, and transactional outbox via pure Java 21.',
+      vi: 'Làm chủ các bài toán cốt lõi của hệ thống phân tán: phân tách thời gian, ngữ nghĩa giao hàng (At-least-once / EOS), chống mất gói tin, kẹt Consumer Lag, kiểm soát áp suất ngược (Backpressure) và bão Rebalance bằng hoạt họa trực quan và Spring Boot 3.'
     },
     badgeText: {
-      en: 'Phase 5 · Upcoming',
-      vi: 'Giai đoạn 5 · Sắp ra mắt'
+      en: 'Available Now · 20 Distributed Topics',
+      vi: 'Sẵn sàng học · 20 Chuyên đề phân tán'
     },
-    status: 'upcoming',
+    status: 'available',
     accent: '#8b5cf6',
     accentSoft: '#ddd6fe',
     accentBg: 'rgba(139, 92, 246, 0.08)',
     accentBorder: 'rgba(139, 92, 246, 0.45)',
     href: '/message-queue',
-    topicsCount: 8,
+    topicsCount: 20,
     roadmapPhase: 5,
-    estimatedDate: { en: 'Phase 5', vi: 'Giai đoạn 5' },
+    estimatedDate: { en: 'Completed (Phase 5)', vi: 'Đã hoàn thành (Giai đoạn 5)' },
     highlights: {
       en: [
-        'Kafka partition offsets & consumer group rebalance',
-        'RabbitMQ Direct, Fanout, and Topic routing keys',
-        'Dead-letter Queue (DLQ) & Exponential Backoff',
-        'Backpressure: producer speed vs consumer lag'
+        'Chương 01: Messaging Fundamentals & Temporal Decoupling',
+        'Chương 02: RabbitMQ Exchanges, Prefetch QoS & DLX Backoff',
+        'Chương 03: Kafka Partitions, Batching LZ4, Rebalance & 2PC EOS',
+        'Chương 04: Flow Control dQ/dt = λ - μ, Consumer Lag & KEDA Auto-scaling',
+        'Advanced Track: Log Compaction, Kafka Streams, Quorum Raft, MM2 DR & Zero-Copy',
+        'Spring Boot 3 & Java 21 Drivers, Idempotent Consumer & Outbox CDC Pattern'
       ],
       vi: [
-        'Cơ chế commit offset và rebalance trong Apache Kafka',
-        'Định tuyến sàn giao dịch Direct, Fanout, Topic trong RabbitMQ',
-        'Hàng đợi lỗi DLQ và chiến lược thử lại Exponential Backoff',
-        'Trực quan hóa độ trễ Consumer Lag khi Producer quá tải'
+        'Chương 01: Nền tảng Hàng đợi & Phân tách thời gian bất đồng bộ',
+        'Chương 02: Định tuyến RabbitMQ Exchange, QoS Prefetch & Thử lại DLX',
+        'Chương 03: Phân mảnh Kafka, Nén batch LZ4, Tái cân bằng & 2PC EOS',
+        'Chương 04: Kiểm soát dòng tin dQ/dt = λ - μ, Consumer Lag & Tự co giãn KEDA',
+        'Chuyên đề Nâng cao: Nén log, Kafka Streams RocksDB, Quorum Raft & Linux Zero-Copy',
+        'Thực hành Spring Boot 3 & Java 21, Idempotent Consumer & Transactional Outbox CDC'
       ]
     },
     upcomingFeatures: {
-      en: ['Interactive queue overload simulator', 'Consumer crash recovery flow'],
-      vi: ['Mô phỏng trực quan tràn hàng đợi', 'Xử lý khi một node consumer bị sập']
+      en: ['Live Backpressure & Consumer Lag Simulator', 'Cooperative Sticky Rebalance interactive visualizer'],
+      vi: ['Phòng thí nghiệm tương tác áp suất ngược dQ/dt', 'Mô phỏng trực quan tái cân bằng Cooperative Sticky']
     }
   },
   {

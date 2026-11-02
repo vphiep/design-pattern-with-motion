@@ -12,6 +12,8 @@ import { getAllDatabaseTopics, DATABASE_CATEGORY_META } from '@/lib/database/dat
 import type { DatabaseTopic } from '@/lib/database/types';
 import { getAllJavaCoreTopics, JAVA_CORE_CATEGORY_META } from '@/lib/javacore/data';
 import type { JavaCoreTopic } from '@/lib/javacore/types';
+import { getAllMessagingTopics, MESSAGING_CATEGORY_META } from '@/lib/messaging/data';
+import type { MessagingTopic } from '@/lib/messaging/types';
 import { cn } from '@/lib/utils/cn';
 
 interface CommandPaletteProps {
@@ -42,6 +44,11 @@ interface JavaCoreSearchResult {
   topic: JavaCoreTopic;
 }
 
+interface MessagingSearchResult {
+  kind: 'messaging';
+  topic: MessagingTopic;
+}
+
 interface ModuleSearchResult {
   kind: 'module';
   module: LearningModule;
@@ -50,6 +57,7 @@ interface ModuleSearchResult {
 type SearchItem =
   | JavaCoreSearchResult
   | DatabaseSearchResult
+  | MessagingSearchResult
   | PatternSearchResult
   | ModuleSearchResult
   | QuickLink;
@@ -71,9 +79,24 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
   const patterns = useMemo(() => getAllPatterns(), []);
   const databaseTopics = useMemo(() => getAllDatabaseTopics(), []);
   const javaCoreTopics = useMemo(() => getAllJavaCoreTopics(), []);
+  const messagingTopics = useMemo(() => getAllMessagingTopics(), []);
 
   const quickLinks: QuickLink[] = useMemo(
     () => [
+      {
+        id: 'ql-messaging',
+        title: locale === 'vi' ? 'Kafka vs RabbitMQ Streaming Hub' : 'Kafka vs RabbitMQ Streaming Hub',
+        category: 'Messaging',
+        href: '/message-queue',
+        kind: 'quicklink'
+      },
+      {
+        id: 'ql-mq-playground',
+        title: locale === 'vi' ? 'Mô phỏng Phân tán & Backpressure' : 'Distributed Flow Control Simulator',
+        category: 'Playground',
+        href: '/message-queue/playground',
+        kind: 'quicklink'
+      },
       {
         id: 'ql-javacore',
         title: locale === 'vi' ? 'Java Core Deep-Dive Hub' : 'Java Core Deep-Dive Hub',
@@ -130,13 +153,19 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
         )
         .map((topic) => ({ kind: 'database', topic }));
 
+      const topMessaging: MessagingSearchResult[] = messagingTopics
+        .filter((t) =>
+          ['message-queue-architecture', 'rabbitmq-exchanges-routing', 'kafka-architecture-partitions', 'backpressure-consumer-lag-flow-control'].includes(t.id)
+        )
+        .map((topic) => ({ kind: 'messaging', topic }));
+
       const topPatterns: PatternSearchResult[] = patterns
         .filter((p) =>
           ['singleton', 'factory-method', 'decorator', 'observer', 'strategy'].includes(p.id)
         )
         .map((pattern) => ({ kind: 'pattern', pattern }));
 
-      return [...quickLinks, ...topJavaCore, ...topDatabase, ...topPatterns];
+      return [...quickLinks, ...topMessaging, ...topJavaCore, ...topDatabase, ...topPatterns];
     }
 
     // 1. Filter Java Core Topics
@@ -193,6 +222,33 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
       }
     }
 
+    // 3. Filter Messaging Topics
+    const matchedMessaging: MessagingSearchResult[] = [];
+    for (const topic of messagingTopics) {
+      const name = topic.name.toLowerCase();
+      const id = topic.id.toLowerCase();
+      const cat = topic.category.toLowerCase();
+      const catMeta = MESSAGING_CATEGORY_META[topic.category];
+      const catLabelVi = (catMeta?.label.vi || '').toLowerCase();
+      const catLabelEn = (catMeta?.label.en || '').toLowerCase();
+      const taglineVi = topic.tagline.vi.toLowerCase();
+      const taglineEn = topic.tagline.en.toLowerCase();
+      const chapter = topic.chapter.toLowerCase();
+
+      if (
+        name.includes(q) ||
+        id.includes(q) ||
+        cat.includes(q) ||
+        catLabelVi.includes(q) ||
+        catLabelEn.includes(q) ||
+        taglineVi.includes(q) ||
+        taglineEn.includes(q) ||
+        chapter.includes(q)
+      ) {
+        matchedMessaging.push({ kind: 'messaging', topic });
+      }
+    }
+
     // 3. Filter Patterns
     const matchedPatterns: PatternSearchResult[] = [];
     for (const pattern of patterns) {
@@ -234,13 +290,14 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
     );
 
     return [
+      ...matchedMessaging,
       ...matchedJavaCore,
       ...matchedDatabase,
       ...matchedPatterns,
       ...matchedModules,
       ...matchedQuickLinks
     ];
-  }, [query, javaCoreTopics, databaseTopics, patterns, quickLinks, tx, ui]);
+  }, [query, javaCoreTopics, databaseTopics, messagingTopics, patterns, quickLinks, tx, ui]);
 
   // Reset selected index when items change
   useEffect(() => {
@@ -291,7 +348,9 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
 
   const executeItem = (item: SearchItem) => {
     onClose();
-    if (item.kind === 'javacore') {
+    if (item.kind === 'messaging') {
+      router.push(`/message-queue/${item.topic.id}`);
+    } else if (item.kind === 'javacore') {
       router.push(`/java-core/${item.topic.id}`);
     } else if (item.kind === 'database') {
       router.push(`/database/${item.topic.id}`);
@@ -532,6 +591,68 @@ export function CommandPalette({ isOpen, onClose }: CommandPaletteProps) {
                                 )}
                               >
                                 Database · {catTitle}
+                              </span>
+                            </div>
+                            <p
+                              className={cn(
+                                'text-xs mt-0.5 line-clamp-1',
+                                isSelected ? 'text-white/90' : 'text-text-muted'
+                              )}
+                            >
+                              {locale === 'vi' ? t.tagline.vi : t.tagline.en}
+                            </p>
+                          </div>
+                        </div>
+                        <ArrowRight
+                          size={14}
+                          className={cn('shrink-0', isSelected ? 'text-white' : 'text-text-soft')}
+                        />
+                      </div>
+                    );
+                  }
+
+                  // 3b. Messaging Topic
+                  if (item.kind === 'messaging') {
+                    const t = item.topic;
+                    const catMeta = MESSAGING_CATEGORY_META[t.category];
+                    const catTitle = catMeta ? (locale === 'vi' ? catMeta.label.vi : catMeta.label.en) : t.category;
+
+                    return (
+                      <div
+                        key={`msg-${t.id}`}
+                        data-active={isSelected}
+                        onClick={() => executeItem(item)}
+                        onMouseEnter={() => setSelectedIndex(idx)}
+                        className={cn(
+                          'flex items-center justify-between px-3.5 py-2.5 rounded-xl cursor-pointer transition-colors gap-3',
+                          isSelected
+                            ? 'bg-purple-600 text-white shadow-sm'
+                            : 'hover:bg-purple-500/5 dark:hover:bg-purple-500/10 text-text'
+                        )}
+                      >
+                        <div className="flex items-start gap-3 min-w-0">
+                          <div
+                            className={cn(
+                              'p-1.5 rounded-lg shrink-0 mt-0.5',
+                              isSelected
+                                ? 'bg-white/20 text-white'
+                                : 'bg-purple-500/10 text-purple-400 border border-purple-500/20'
+                            )}
+                          >
+                            <Layers size={15} />
+                          </div>
+                          <div className="min-w-0">
+                            <div className="flex items-center gap-2 flex-wrap">
+                              <span className="font-semibold text-sm">{t.name}</span>
+                              <span
+                                className={cn(
+                                  'text-[10px] font-mono tracking-wider px-1.5 py-0.5 rounded border',
+                                  isSelected
+                                    ? 'border-white/30 text-white'
+                                    : 'border-purple-500/30 text-purple-600 dark:text-purple-400 bg-purple-500/10'
+                                )}
+                              >
+                                {t.chapter} · {catTitle}
                               </span>
                             </div>
                             <p

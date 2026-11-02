@@ -1,15 +1,10 @@
-import { getModuleById } from '@/lib/modules/registry';
-import { ModuleLabView } from '@/components/modules/ModuleLabView';
-import { notFound } from 'next/navigation';
+import { MessagingHubExperience } from '@/components/messaging/MessagingHubExperience';
 
 export const metadata = {
-  title: 'Message Queues & Streaming — Visual Engineering Lab',
-  description: 'Kafka partition rebalancing, consumer offsets, RabbitMQ topic exchanges and backpressure handling.'
+  title: 'Distributed Messaging & Streaming — Apache Kafka vs RabbitMQ Visualizer',
+  description: 'Master core distributed systems challenges: temporal decoupling, delivery semantics, poison messages, partition replication, consumer rebalance, backpressure, and transactional outbox.'
 };
 
-export default function MessageQueueModulePage() {
-  const mod = getModuleById('message-queue');
-  if (!mod) notFound();
-
-  return <ModuleLabView module={mod} />;
+export default function MessageQueuePage() {
+  return <MessagingHubExperience />;
 }

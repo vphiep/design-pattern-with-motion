@@ -16,7 +16,7 @@ export interface TopicSection {
 export interface TopicMinimapProps {
   sections: TopicSection[];
   locale?: 'vi' | 'en';
-  accentColor?: 'sky' | 'rose' | 'emerald' | 'amber';
+  accentColor?: 'sky' | 'rose' | 'emerald' | 'amber' | 'purple';
   className?: string;
 }
 
@@ -57,6 +57,14 @@ export function TopicMinimap({
           progressBar: 'bg-amber-500',
           hoverText: 'hover:text-amber-500 dark:hover:text-amber-400',
           ring: 'focus:ring-amber-500/40'
+        };
+      case 'purple':
+        return {
+          activeBg: 'bg-purple-500/15 border-purple-500/40 text-purple-600 dark:text-purple-400 shadow-xs',
+          activeDot: 'bg-purple-500 shadow-[0_0_8px_rgba(168,85,247,0.6)]',
+          progressBar: 'bg-purple-500',
+          hoverText: 'hover:text-purple-500 dark:hover:text-purple-400',
+          ring: 'focus:ring-purple-500/40'
         };
       case 'sky':
       default:
