@@ -14,7 +14,11 @@ import {
   Database,
   Layers,
   Play,
-  Cpu
+  Cpu,
+  GitBranch,
+  Container,
+  ShieldCheck,
+  Workflow
 } from 'lucide-react';
 import { useTheme } from './ThemeProvider';
 import { useProgress } from './ProgressProvider';
@@ -24,12 +28,44 @@ import { ProgressIndicator } from './ProgressIndicator';
 import { LocaleSwitcher } from './LocaleSwitcher';
 import { cn } from '@/lib/utils/cn';
 
+/** Infrastructure courses built on the shared course framework (components/courses). */
+const INFRA_COURSES = [
+  { base: '/cdc', title: 'CDC', sub: 'WAL · Debezium', Icon: GitBranch, tone: 'emerald' },
+  { base: '/docker', title: 'Docker', sub: 'Containers', Icon: Container, tone: 'cyan' },
+  { base: '/security', title: 'Security', sub: 'OAuth · TLS', Icon: ShieldCheck, tone: 'rose' },
+  { base: '/devops', title: 'DevOps', sub: 'K8s · GitOps', Icon: Workflow, tone: 'amber' }
+] as const;
+
+const INFRA_TONES = {
+  emerald: {
+    badge: 'border-emerald-500/40 bg-emerald-500/10 text-emerald-400',
+    text: 'text-emerald-400',
+    bar: 'bg-emerald-400'
+  },
+  cyan: {
+    badge: 'border-cyan-500/40 bg-cyan-500/10 text-cyan-400',
+    text: 'text-cyan-400',
+    bar: 'bg-cyan-400'
+  },
+  rose: {
+    badge: 'border-rose-500/40 bg-rose-500/10 text-rose-400',
+    text: 'text-rose-400',
+    bar: 'bg-rose-400'
+  },
+  amber: {
+    badge: 'border-amber-500/40 bg-amber-500/10 text-amber-400',
+    text: 'text-amber-400',
+    bar: 'bg-amber-400'
+  }
+} as const;
+
 function isActive(pathname: string, href: string) {
   if (href === '/') return pathname === '/';
   if (href === '/database') return pathname === '/database';
   if (href === '/java-core') return pathname === '/java-core';
   if (href === '/design-systems') return pathname === '/design-systems';
   if (href === '/patterns') return pathname === '/patterns';
+  if (INFRA_COURSES.some((c) => c.base === href)) return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
@@ -49,6 +85,10 @@ export function Nav() {
   const isDatabaseCourse = pathname.startsWith('/database');
   const isJavaCoreCourse = pathname.startsWith('/java-core');
   const isMessagingCourse = pathname.startsWith('/message-queue');
+  const infraCourse = INFRA_COURSES.find(
+    (c) => pathname === c.base || pathname.startsWith(`${c.base}/`)
+  );
+  const infraTone = infraCourse ? INFRA_TONES[infraCourse.tone] : null;
 
   interface NavLinkItem {
     href: string;
@@ -60,7 +100,11 @@ export function Nav() {
   const messagingNavLinks: NavLinkItem[] = [
     { href: '/message-queue', label: locale === 'vi' ? 'Tổng quan' : 'Overview' },
     { href: '/message-queue#curriculum', label: locale === 'vi' ? '20 Bài học' : 'Curriculum' },
-    { href: '/message-queue/playground', label: locale === 'vi' ? 'Lab Phân tán' : 'Live Simulator', isHighlight: true }
+    {
+      href: '/message-queue/playground',
+      label: locale === 'vi' ? 'Lab Phân tán' : 'Live Simulator',
+      isHighlight: true
+    }
   ];
 
   const javaCoreNavLinks: NavLinkItem[] = [
@@ -72,7 +116,11 @@ export function Nav() {
   const databaseNavLinks: NavLinkItem[] = [
     { href: '/database', label: locale === 'vi' ? 'Tổng quan' : 'Overview' },
     { href: '/database#curriculum', label: locale === 'vi' ? '12 Chủ đề' : 'Curriculum' },
-    { href: '/database/playground', label: locale === 'vi' ? 'Lab Mô phỏng' : 'Live Simulator', isHighlight: true }
+    {
+      href: '/database/playground',
+      label: locale === 'vi' ? 'Lab Mô phỏng' : 'Live Simulator',
+      isHighlight: true
+    }
   ];
 
   const designPatternNavLinks: NavLinkItem[] = [
@@ -84,20 +132,54 @@ export function Nav() {
     { href: '/playground', label: ui.nav.playground }
   ];
 
-  const currentNavLinks = isMessagingCourse
-    ? messagingNavLinks
-    : isJavaCoreCourse
-    ? javaCoreNavLinks
-    : isDatabaseCourse
-    ? databaseNavLinks
-    : designPatternNavLinks;
+  const infraNavLinks: NavLinkItem[] = infraCourse
+    ? [
+        { href: infraCourse.base, label: locale === 'vi' ? 'Tổng quan' : 'Overview' },
+        {
+          href: `${infraCourse.base}#curriculum`,
+          label: locale === 'vi' ? 'Bài học' : 'Curriculum'
+        }
+      ]
+    : [];
+
+  const currentNavLinks = infraCourse
+    ? infraNavLinks
+    : isMessagingCourse
+      ? messagingNavLinks
+      : isJavaCoreCourse
+        ? javaCoreNavLinks
+        : isDatabaseCourse
+          ? databaseNavLinks
+          : designPatternNavLinks;
 
   return (
     <header className="sticky top-0 z-40 border-b border-border-soft bg-bg/90 backdrop-blur-md">
       <div className="mx-auto flex h-14 max-w-wide items-center justify-between gap-6 px-6">
         {/* Brand / Logo */}
         <div className="flex items-center gap-4 shrink-0">
-          {isMessagingCourse ? (
+          {infraCourse && infraTone ? (
+            <Link
+              href={infraCourse.base}
+              className="group flex items-center gap-2.5"
+              aria-label={infraCourse.title}
+            >
+              <span
+                className={cn(
+                  'grid h-8 w-8 place-items-center rounded-lg border shadow-sm transition-transform group-hover:scale-105',
+                  infraTone.badge
+                )}
+              >
+                <infraCourse.Icon size={16} strokeWidth={2.2} />
+              </span>
+              <span className="text-display text-base leading-none">
+                <span className="font-bold tracking-tight text-text">{infraCourse.title}</span>
+                <span className="mx-1.5 text-text-soft">/</span>
+                <span className={cn('font-mono text-xs uppercase tracking-wider', infraTone.text)}>
+                  {infraCourse.sub}
+                </span>
+              </span>
+            </Link>
+          ) : isMessagingCourse ? (
             <Link
               href="/message-queue"
               className="group flex items-center gap-2.5"
@@ -109,7 +191,9 @@ export function Nav() {
               <span className="text-display text-base leading-none">
                 <span className="font-bold tracking-tight text-text">Kafka vs RabbitMQ</span>
                 <span className="mx-1.5 text-text-soft">/</span>
-                <span className="font-mono text-xs uppercase tracking-wider text-purple-400">Streaming</span>
+                <span className="font-mono text-xs uppercase tracking-wider text-purple-400">
+                  Streaming
+                </span>
               </span>
             </Link>
           ) : isJavaCoreCourse ? (
@@ -124,7 +208,9 @@ export function Nav() {
               <span className="text-display text-base leading-none">
                 <span className="font-bold tracking-tight text-text">Java Core</span>
                 <span className="mx-1.5 text-text-soft">/</span>
-                <span className="font-mono text-xs uppercase tracking-wider text-rose-500">JVM</span>
+                <span className="font-mono text-xs uppercase tracking-wider text-rose-500">
+                  JVM
+                </span>
               </span>
             </Link>
           ) : isDatabaseCourse ? (
@@ -139,11 +225,17 @@ export function Nav() {
               <span className="text-display text-base leading-none">
                 <span className="font-bold tracking-tight text-text">Database</span>
                 <span className="mx-1.5 text-text-soft">/</span>
-                <span className="font-mono text-xs uppercase tracking-wider text-sky-400">Internals</span>
+                <span className="font-mono text-xs uppercase tracking-wider text-sky-400">
+                  Internals
+                </span>
               </span>
             </Link>
           ) : (
-            <Link href="/design-systems" className="group flex items-center gap-2.5" aria-label={ui.nav.homeAria}>
+            <Link
+              href="/design-systems"
+              className="group flex items-center gap-2.5"
+              aria-label={ui.nav.homeAria}
+            >
               <span className="grid h-8 w-8 place-items-center rounded-lg border-hairline bg-accent text-bg shadow-sm transition-transform group-hover:scale-105">
                 <Compass size={16} strokeWidth={2} />
               </span>
@@ -170,11 +262,11 @@ export function Nav() {
                     ? isMessagingCourse
                       ? 'border border-purple-500/40 bg-purple-500/10 text-purple-400 font-bold hover:bg-purple-500/20'
                       : isJavaCoreCourse
-                      ? 'border border-rose-500/40 bg-rose-500/10 text-rose-500 font-bold hover:bg-rose-500/20'
-                      : 'border border-sky-500/40 bg-sky-500/10 text-sky-400 font-bold hover:bg-sky-500/20'
+                        ? 'border border-rose-500/40 bg-rose-500/10 text-rose-500 font-bold hover:bg-rose-500/20'
+                        : 'border border-sky-500/40 bg-sky-500/10 text-sky-400 font-bold hover:bg-sky-500/20'
                     : active
-                    ? 'text-text font-bold bg-surface'
-                    : 'text-text-muted hover:text-text hover:bg-surface/50'
+                      ? 'text-text font-bold bg-surface'
+                      : 'text-text-muted hover:text-text hover:bg-surface/50'
                 )}
               >
                 {link.label}
@@ -183,7 +275,15 @@ export function Nav() {
                     layoutId="activeNavIndicator"
                     className={cn(
                       'absolute bottom-0 left-3 right-3 h-[2px]',
-                      isMessagingCourse ? 'bg-purple-400' : isJavaCoreCourse ? 'bg-rose-500' : isDatabaseCourse ? 'bg-sky-400' : 'bg-accent'
+                      infraTone
+                        ? infraTone.bar
+                        : isMessagingCourse
+                          ? 'bg-purple-400'
+                          : isJavaCoreCourse
+                            ? 'bg-rose-500'
+                            : isDatabaseCourse
+                              ? 'bg-sky-400'
+                              : 'bg-accent'
                     )}
                     transition={{ type: 'spring', stiffness: 500, damping: 35 }}
                   />
@@ -195,7 +295,7 @@ export function Nav() {
 
         {/* Global Toolbar */}
         <div className="flex items-center gap-2 shrink-0">
-          {!isDatabaseCourse && !isJavaCoreCourse && !isMessagingCourse && (
+          {!isDatabaseCourse && !isJavaCoreCourse && !isMessagingCourse && !infraCourse && (
             <div className="hidden lg:block">
               <ProgressIndicator count={count} total={total} />
             </div>

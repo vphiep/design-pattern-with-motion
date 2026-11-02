@@ -123,7 +123,7 @@ export interface UIStrings {
       outermostHint: string;
     };
     factory: {
-      request: (product: string) => string;
+      request: (creator: string) => string;
       clear: string;
     };
     strategy: {
@@ -303,8 +303,10 @@ const en: UIStrings = {
     simTag: 'sim',
     blurbs: {
       observer: 'Add listeners, drag them, ping the subject.',
-      decorator: 'Stack wrappers on a base object.',
-      'factory-method': 'Send requests; different products emerge.',
+      decorator:
+        'Stack wrappers on a base object, then follow render() in through every layer and back out.',
+      'factory-method':
+        'Pick a Logger subclass and call log(); its createDestination() decides which product gets built.',
       strategy: 'Swap the algorithm and watch the quote change.'
     },
     observer: {
@@ -321,7 +323,7 @@ const en: UIStrings = {
       outermostHint: 'outermost is last wrapped'
     },
     factory: {
-      request: (product) => `Request ${product}`,
+      request: (creator) => `log() via ${creator}`,
       clear: 'Clear'
     },
     strategy: {
@@ -501,8 +503,10 @@ const vi: UIStrings = {
     simTag: 'sim',
     blurbs: {
       observer: 'Thêm listener, kéo thả chúng, và ping subject.',
-      decorator: 'Chồng các lớp wrapper lên một object gốc.',
-      'factory-method': 'Gửi yêu cầu; các product khác nhau lần lượt xuất hiện.',
+      decorator:
+        'Chồng các lớp wrapper lên một object gốc, rồi theo dõi render() đi vào qua từng lớp và quay ra.',
+      'factory-method':
+        'Chọn một subclass của Logger rồi gọi log(); createDestination() của nó quyết định product nào được tạo.',
       strategy: 'Đổi thuật toán và xem báo giá thay đổi.'
     },
     observer: {
@@ -519,7 +523,7 @@ const vi: UIStrings = {
       outermostHint: 'lớp bọc sau cùng nằm ngoài cùng'
     },
     factory: {
-      request: (product) => `Yêu cầu ${product}`,
+      request: (creator) => `log() qua ${creator}`,
       clear: 'Xóa hết'
     },
     strategy: {

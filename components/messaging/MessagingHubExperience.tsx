@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
+import { MathFormula } from '@/components/MathFormula';
 import { motion } from 'framer-motion';
 import {
   Layers,
@@ -312,9 +313,11 @@ export function MessagingHubExperience() {
 
                   {/* Math Formula Preview */}
                   <div className="p-2.5 rounded-lg bg-[#0c0a14] border border-border-soft/60 mb-4 overflow-hidden text-center">
-                    <span className="text-[10px] font-mono text-purple-300/80 line-clamp-1">
-                      {topic.coreTheory.math.formula}
-                    </span>
+                    <MathFormula
+                      formula={topic.coreTheory.math.formula}
+                      displayMode={false}
+                      className="overflow-hidden whitespace-nowrap text-[11px] text-purple-300/80 [mask-image:linear-gradient(to_right,black_88%,transparent)]"
+                    />
                   </div>
                 </div>
 

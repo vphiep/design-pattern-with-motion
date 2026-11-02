@@ -29,7 +29,7 @@ export const messageQueueArchitectureTopic: MessagingTopic = {
       en: 'Introduce an asynchronous message broker as a persistent buffer for temporal decoupling. Producers publish messages and receive immediate acks (< 5ms). The broker stores messages durably, decoupling ingestion throughput from downstream consumer processing rates.'
     },
     math: {
-      formula: 'T_{total} = T_{network} + T_{queueing} + T_{processing}',
+      formula: 'T_{\\text{total}} = T_{\\text{network}} + T_{\\text{queueing}} + T_{\\text{processing}}',
       timeComplexity: 'O(1) enqueue · O(1) dequeue',
       spaceComplexity: 'O(M) — M là số message trong buffer',
       throughputFormula: 'Throughput_{system} \\approx \\min(\\lambda_{producer}, \\mu_{consumer}) \\quad \\text{khi } \\text{Queue Depth ổn định}'

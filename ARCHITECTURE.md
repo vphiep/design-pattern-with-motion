@@ -122,6 +122,6 @@ Do not introduce a backend. Keep the editorial tokens (orange is accent only). R
 
 ## Playground
 
-`lib/canvas/useCanvas.ts` sizes a canvas with DPR and reads CSS variables for theme colors.
+`lib/canvas/useCanvas.ts` sizes a canvas with DPR (the CSS box drives the size — never write inline width/height), reads CSS variables for theme colors and fonts, and paints on `requestAnimationFrame`: once after a size, theme, or deps change, then every frame while `draw` returns `true`. Under reduced motion it paints one frame and sims draw their end state (`progress()` returns 1). Helpers: `progress`, `easeInOut`, `easeOut`, `lerp`, `approach` (frame-rate independent), `fitText`.
 
 Sims live in `components/playground/`. Chrome strings (buttons, hints) come from `ui.playground`.

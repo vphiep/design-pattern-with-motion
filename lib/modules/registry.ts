@@ -69,7 +69,10 @@ export const LEARNING_MODULES: LearningModule[] = [
       ]
     },
     upcomingFeatures: {
-      en: ['Interactive Bytecode Stack Machine simulator', 'JOL (Java Object Layout) byte inspector'],
+      en: [
+        'Interactive Bytecode Stack Machine simulator',
+        'JOL (Java Object Layout) byte inspector'
+      ],
       vi: ['Mô phỏng máy ảo Bytecode Stack Machine', 'Trình soi byte nhị phân đối tượng JOL']
     }
   },
@@ -172,10 +175,10 @@ export const LEARNING_MODULES: LearningModule[] = [
       vi: 'Xem các thao tác ghi cơ sở dữ liệu chuyển hóa thành luồng sự kiện bảo toàn tính nhất quán sang Elasticsearch/Redis.'
     },
     badgeText: {
-      en: 'Phase 4 · In Development',
-      vi: 'Giai đoạn 4 · Đang phát triển'
+      en: 'Available Now · 6 Topics',
+      vi: 'Sẵn sàng học · 6 Chuyên đề'
     },
-    status: 'development',
+    status: 'available',
     accent: '#10b981',
     accentSoft: '#a7f3d0',
     accentBg: 'rgba(16, 185, 129, 0.08)',
@@ -183,19 +186,17 @@ export const LEARNING_MODULES: LearningModule[] = [
     href: '/cdc',
     topicsCount: 6,
     roadmapPhase: 4,
-    estimatedDate: { en: 'Phase 4', vi: 'Giai đoạn 4' },
+    estimatedDate: { en: 'Completed (Phase 4)', vi: 'Đã hoàn thành (Giai đoạn 4)' },
     highlights: {
       en: [
-        'Transactional Outbox Pattern step simulation',
-        'Postgres Logical Replication & WAL parser',
-        'Debezium event schema envelope structure',
-        'Handling downstream network failure & idempotency'
+        'Chương 01: Dual-write problem, Postgres WAL/LSN/slots, MySQL binlog & GTID',
+        'Chương 02: Debezium on Kafka Connect, change event envelope, incremental snapshots (DBLog)',
+        'Chương 03: Outbox Event Router, idempotent consumers, heartbeats & lag monitoring'
       ],
       vi: [
-        'Mô phỏng từng bước Transactional Outbox Pattern',
-        'Cơ chế Logical Replication và bộ đọc Postgres WAL',
-        'Cấu trúc thông điệp sự kiện Debezium JSON envelope',
-        'Xử lý mất kết nối hạ tầng và tính lũy kế (Idempotency)'
+        'Chương 01: Bài toán dual-write, Postgres WAL/LSN/slot, MySQL binlog & GTID',
+        'Chương 02: Debezium trên Kafka Connect, envelope sự kiện, incremental snapshot (DBLog)',
+        'Chương 03: Outbox Event Router, consumer idempotent, heartbeat & giám sát lag'
       ]
     },
     upcomingFeatures: {
@@ -206,7 +207,10 @@ export const LEARNING_MODULES: LearningModule[] = [
   {
     id: 'message-queue',
     name: 'Message Queues & Streaming',
-    category: { en: 'Distributed Messaging & Streaming', vi: 'Hạ tầng Hàng đợi & Streaming Phân tán' },
+    category: {
+      en: 'Distributed Messaging & Streaming',
+      vi: 'Hạ tầng Hàng đợi & Streaming Phân tán'
+    },
     tagline: {
       en: 'Distributed systems invariants: Apache Kafka vs RabbitMQ, delivery semantics, partition rebalance, and backpressure.',
       vi: 'Giải quyết các bài toán phân tán: Apache Kafka vs RabbitMQ, ngữ nghĩa phân phát tin, tái cân bằng partition và áp suất ngược.'
@@ -247,8 +251,14 @@ export const LEARNING_MODULES: LearningModule[] = [
       ]
     },
     upcomingFeatures: {
-      en: ['Live Backpressure & Consumer Lag Simulator', 'Cooperative Sticky Rebalance interactive visualizer'],
-      vi: ['Phòng thí nghiệm tương tác áp suất ngược dQ/dt', 'Mô phỏng trực quan tái cân bằng Cooperative Sticky']
+      en: [
+        'Live Backpressure & Consumer Lag Simulator',
+        'Cooperative Sticky Rebalance interactive visualizer'
+      ],
+      vi: [
+        'Phòng thí nghiệm tương tác áp suất ngược dQ/dt',
+        'Mô phỏng trực quan tái cân bằng Cooperative Sticky'
+      ]
     }
   },
   {
@@ -256,38 +266,36 @@ export const LEARNING_MODULES: LearningModule[] = [
     name: 'Docker & Containerization',
     category: { en: 'Infrastructure & Virtualization', vi: 'Ảo hóa & Hạ tầng' },
     tagline: {
-      en: 'Linux Namespaces, Cgroups resource limits, OverlayFS layer unions, and virtual bridge networking.',
-      vi: 'Không gian tên Linux Namespaces, giới hạn tài nguyên Cgroups, OverlayFS và mạng cầu ảo.'
+      en: 'From VMs vs containers and Linux namespaces/cgroups to Dockerfile layers, Compose stacks, supply-chain security and the registry workflow.',
+      vi: 'Từ VM vs container và namespaces/cgroups của Linux tới layer Dockerfile, stack Compose, bảo mật supply chain và quy trình registry.'
     },
     description: {
       en: 'Unravel what a container really is under the hood: no black box, just isolated Linux kernel primitives working together.',
       vi: 'Khám phá bản chất thực sự của container: không phải hộp đen, mà là sự kết hợp của các cơ chế hạt nhân Linux kernel.'
     },
     badgeText: {
-      en: 'Phase 6 · Upcoming',
-      vi: 'Giai đoạn 6 · Sắp ra mắt'
+      en: 'Available Now · 11 Topics',
+      vi: 'Sẵn sàng học · 11 Chuyên đề'
     },
-    status: 'upcoming',
+    status: 'available',
     accent: '#06b6d4',
     accentSoft: '#cffafe',
     accentBg: 'rgba(6, 182, 212, 0.08)',
     accentBorder: 'rgba(6, 182, 212, 0.45)',
     href: '/docker',
-    topicsCount: 7,
+    topicsCount: 11,
     roadmapPhase: 6,
-    estimatedDate: { en: 'Phase 6', vi: 'Giai đoạn 6' },
+    estimatedDate: { en: 'Completed (Phase 6)', vi: 'Đã hoàn thành (Giai đoạn 6)' },
     highlights: {
       en: [
-        'Linux Namespaces: PID, NET, MNT, IPC isolation',
-        'Cgroups: Memory, CPU throttling visual curves',
-        'OverlayFS: LowerDir, UpperDir, Merged filesystem layers',
-        'Container Virtual Bridge (veth) packet routing'
+        'Level 1: VMs vs containers, namespaces & cgroups, CLI lifecycle, image layers & build cache',
+        'Level 2: production-ready images, networking & DNS, volumes, Docker Compose stacks',
+        'Level 3: security & supply chain, resource troubleshooting, build-once registry workflow'
       ],
       vi: [
-        'Phân tách không gian tên: PID, NET, MNT, IPC',
-        'Giới hạn tài nguyên CPU/RAM với Cgroups',
-        'Cấu trúc xếp tầng OverlayFS (LowerDir, UpperDir, Merged)',
-        'Định tuyến gói tin qua cặp giao diện mạng ảo veth'
+        'Cấp độ 1: VM vs container, namespaces & cgroups, vòng đời CLI, layer image & build cache',
+        'Cấp độ 2: image production-ready, networking & DNS, volume, stack Docker Compose',
+        'Cấp độ 3: bảo mật & supply chain, troubleshooting tài nguyên, quy trình registry build-once'
       ]
     },
     upcomingFeatures: {
@@ -300,43 +308,44 @@ export const LEARNING_MODULES: LearningModule[] = [
     name: 'Security, OAuth 2.0 & Auth',
     category: { en: 'Security & Protocols', vi: 'Bảo mật & Giao thức' },
     tagline: {
-      en: 'OAuth 2.0 PKCE sequence handshake, JWT token lifecycles, and TLS 1.3 cryptographic key exchange.',
-      vi: 'Bắt tay xác thực OAuth 2.0 PKCE, vòng đời token JWT, và trao đổi khóa mật mã TLS 1.3.'
+      en: 'From the CIA triad, cryptography and TLS to OAuth 2.0 + PKCE, JWT, OIDC, the OWASP Top 10, Keycloak SSO, Zero Trust and Spring Security internals.',
+      vi: 'Từ CIA triad, mật mã học và TLS tới OAuth 2.0 + PKCE, JWT, OIDC, OWASP Top 10, Keycloak SSO, Zero Trust và Spring Security internals.'
     },
     description: {
       en: 'Step through every cryptographic exchange, signature verification, and delegated authorization flow with precision.',
       vi: 'Từng bước kiểm chứng quy trình trao đổi khóa mã hóa, xác minh chữ ký số và phân quyền phân tán.'
     },
     badgeText: {
-      en: 'Phase 7 · Upcoming',
-      vi: 'Giai đoạn 7 · Sắp ra mắt'
+      en: 'Available Now · 16 Topics',
+      vi: 'Sẵn sàng học · 16 Chuyên đề'
     },
-    status: 'upcoming',
+    status: 'available',
     accent: '#f43f5e',
     accentSoft: '#fecdd3',
     accentBg: 'rgba(244, 63, 94, 0.08)',
     accentBorder: 'rgba(244, 63, 94, 0.45)',
-    href: '/modules/security',
-    topicsCount: 6,
+    href: '/security',
+    topicsCount: 16,
     roadmapPhase: 7,
-    estimatedDate: { en: 'Phase 7', vi: 'Giai đoạn 7' },
+    estimatedDate: { en: 'Completed (Phase 7)', vi: 'Đã hoàn thành (Giai đoạn 7)' },
     highlights: {
       en: [
-        'OAuth 2.0 Authorization Code with PKCE step sequence',
-        'JWT structure (Header.Payload.Signature) & HMAC verification',
-        'TLS 1.3 Handshake: ECDHE key exchange to AES-GCM session',
-        'Zero Trust Architecture: mutual TLS (mTLS) between services'
+        'Levels 1–2: CIA & threat modeling, cryptography, TLS, sessions/tokens, RBAC/ABAC/ReBAC, passwords & MFA',
+        'Level 3: OAuth 2.0 architecture, flows & PKCE, JWT validation, OpenID Connect & federation',
+        'Levels 4–5: OWASP Top 10, XSS/CSRF/CORS/CSP, API security, Keycloak SSO, Zero Trust, Spring Security'
       ],
       vi: [
-        'Quy trình ủy quyền OAuth 2.0 mã xác thực với PKCE',
-        'Cấu trúc token JWT và kiểm tra tính toàn vẹn HMAC',
-        'Bắt tay TLS 1.3 từ trao đổi khóa ECDHE sang AES đối xứng',
-        'Kiến trúc Zero Trust và xác thực mTLS giữa các microservices'
+        'Cấp độ 1–2: CIA & threat modeling, mật mã học, TLS, session/token, RBAC/ABAC/ReBAC, mật khẩu & MFA',
+        'Cấp độ 3: kiến trúc OAuth 2.0, các flow & PKCE, xác minh JWT, OpenID Connect & federation',
+        'Cấp độ 4–5: OWASP Top 10, XSS/CSRF/CORS/CSP, API security, Keycloak SSO, Zero Trust, Spring Security'
       ]
     },
     upcomingFeatures: {
       en: ['JWT token decoder & attack simulator', 'mTLS handshake interactive inspection'],
-      vi: ['Mô phỏng giải mã JWT và thử tấn công giả lập', 'Kiểm tra chi tiết từng bước bắt tay mTLS']
+      vi: [
+        'Mô phỏng giải mã JWT và thử tấn công giả lập',
+        'Kiểm tra chi tiết từng bước bắt tay mTLS'
+      ]
     }
   },
   {
@@ -352,35 +361,36 @@ export const LEARNING_MODULES: LearningModule[] = [
       vi: 'Mô phỏng triển khai zero-downtime, chuyển dịch lưu lượng dần dần, cơ chế kiểm tra sức khỏe và tự động rollback.'
     },
     badgeText: {
-      en: 'Phase 8 · Upcoming',
-      vi: 'Giai đoạn 8 · Sắp ra mắt'
+      en: 'Available Now · 6 Topics',
+      vi: 'Sẵn sàng học · 6 Chuyên đề'
     },
-    status: 'upcoming',
+    status: 'available',
     accent: '#f59e0b',
     accentSoft: '#fde68a',
     accentBg: 'rgba(245, 158, 11, 0.08)',
     accentBorder: 'rgba(245, 158, 11, 0.45)',
-    href: '/modules/devops',
+    href: '/devops',
     topicsCount: 6,
     roadmapPhase: 8,
-    estimatedDate: { en: 'Phase 8', vi: 'Giai đoạn 8' },
+    estimatedDate: { en: 'Completed (Phase 8)', vi: 'Đã hoàn thành (Giai đoạn 8)' },
     highlights: {
       en: [
-        'Canary Release: 90% stable vs 10% canary traffic splitting',
-        'Blue/Green switchover with instantaneous router flip',
-        'Kubernetes: Ingress -> Service -> Pod replica scaling',
-        'Horizontal Pod Autoscaler (HPA) responding to traffic spikes'
+        'Chương 01: Build-once CI/CD, SBOM, cosign signing, DORA metrics',
+        'Chương 02: Kubernetes scheduler, controllers & rolling updates, Services & Gateway API',
+        'Chương 03: GitOps + canary analysis, HPA autoscaling, SLO burn-rate alerting'
       ],
       vi: [
-        'Chiến lược Canary: Chia tách lưu lượng 90% ổn định / 10% thử nghiệm',
-        'Chuyển đổi tức thì Blue/Green không gây gián đoạn',
-        'Mô hình topo K8s: Ingress -> Service -> Replica Pods',
-        'Co giãn số lượng Pod tự động theo lưu lượng tải (HPA)'
+        'Chương 01: CI/CD build-once, SBOM, ký cosign, DORA metrics',
+        'Chương 02: Kubernetes scheduler, controller & rolling update, Service & Gateway API',
+        'Chương 03: GitOps + canary analysis, HPA autoscaling, cảnh báo burn rate SLO'
       ]
     },
     upcomingFeatures: {
       en: ['Simulated traffic spike stress tester', 'Rollback trigger sandbox'],
-      vi: ['Mô phỏng bơm tải cao để kiểm tra tự động co giãn', 'Thử nghiệm tình huống lỗi kích hoạt Rollback']
+      vi: [
+        'Mô phỏng bơm tải cao để kiểm tra tự động co giãn',
+        'Thử nghiệm tình huống lỗi kích hoạt Rollback'
+      ]
     }
   }
 ];

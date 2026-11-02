@@ -2,6 +2,7 @@
 
 import { useMemo } from 'react';
 import katex from 'katex';
+import { cn } from '@/lib/utils/cn';
 
 interface MathFormulaProps {
   formula: string;
@@ -29,7 +30,7 @@ export function MathFormula({
 
   return (
     <div
-      className={`katex-math-container overflow-x-auto select-text ${className}`}
+      className={cn('katex-math-container overflow-x-auto select-text', className)}
       dangerouslySetInnerHTML={{ __html: renderedHtml }}
     />
   );

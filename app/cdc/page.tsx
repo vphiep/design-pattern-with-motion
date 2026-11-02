@@ -1,15 +1,11 @@
-import { getModuleById } from '@/lib/modules/registry';
-import { ModuleLabView } from '@/components/modules/ModuleLabView';
-import { notFound } from 'next/navigation';
+import { CdcHub } from '@/components/cdc/CdcCourse';
 
 export const metadata = {
-  title: 'Change Data Capture (CDC) — Visual Engineering Lab',
-  description: 'Postgres WAL commit stream, Debezium connectors, and solving dual-writes with Transactional Outbox.'
+  title: 'Change Data Capture (CDC) — WAL, Debezium & Transactional Outbox',
+  description:
+    'Dual writes, PostgreSQL WAL & logical decoding, MySQL binlog/GTID, Debezium on Kafka Connect, incremental snapshots and the Outbox Event Router.'
 };
 
-export default function CdcModulePage() {
-  const mod = getModuleById('cdc-event-driven');
-  if (!mod) notFound();
-
-  return <ModuleLabView module={mod} />;
+export default function CdcPage() {
+  return <CdcHub />;
 }

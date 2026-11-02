@@ -5,10 +5,11 @@ import { Copy, Check } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { cn } from '@/lib/utils/cn';
 import { useLocale } from './LocaleProvider';
+import type { CodeLanguage } from '@/lib/courses/types';
 
 interface CodeBlockProps {
   code: string;
-  language?: 'java';
+  language?: CodeLanguage;
   caption?: string;
   filename?: string;
   className?: string;
@@ -18,7 +19,7 @@ interface CodeBlockProps {
 }
 
 /**
- * Syntax-highlighted Java code block. Uses Shiki on mount to produce HTML.
+ * Syntax-highlighted code block (Java by default). Uses Shiki on mount to produce HTML.
  * The container manages its own light/dark Shiki theme via CSS variables.
  */
 export function CodeBlock({
@@ -97,7 +98,7 @@ export function CodeBlock({
     >
       {(filename || caption) && (
         <figcaption className="flex items-center justify-between border-b border-border-soft px-4 py-2">
-          <span className="caption">{filename ?? 'example.java'}</span>
+          <span className="caption">{filename ?? `example.${language}`}</span>
           {caption && <span className="text-xs text-text-soft">{caption}</span>}
         </figcaption>
       )}

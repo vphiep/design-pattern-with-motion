@@ -45,8 +45,8 @@ export function PlaygroundStudio() {
                 type="button"
                 onClick={() => setActive(s.id)}
                 className={cn(
-                  'relative border-hairline bg-surface px-3 py-2 text-left transition-colors',
-                  isSelected ? 'text-bg' : 'text-text hover:bg-bg-elevated'
+                  'relative isolate border-hairline px-3 py-2 text-left transition-colors',
+                  isSelected ? 'text-bg' : 'bg-surface text-text hover:bg-bg-elevated'
                 )}
               >
                 {isSelected && (

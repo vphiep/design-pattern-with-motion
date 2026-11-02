@@ -9,8 +9,8 @@ export const factoryMethod: Pattern = {
     vi: 'Để một method quyết định class cụ thể nào sẽ được tạo, nhờ đó caller không cần biết kiểu concrete.'
   },
   analogy: {
-    en: 'A coffee shop has one button on the screen — “order coffee”. Behind it, the machine decides whether you get an espresso, a latte, or a drip. You never construct a Latte directly; you ask the shop, and it picks the right kind.',
-    vi: 'Quán cà phê có một nút trên màn hình — “gọi cà phê”. Đằng sau đó, máy tự quyết định bạn nhận espresso, latte hay cà phê phin. Bạn không bao giờ tự new một Latte; bạn hỏi quán, và quán chọn đúng loại.'
+    en: 'A coffee chain writes one ordering routine for every branch: take the order, brew “the house coffee”, hand it over. Each branch fills in only that brew step — the Milan branch makes an espresso, the Hanoi branch makes a phin drip. The routine never names a drink; whichever branch you walk into decides what gets made.',
+    vi: 'Một chuỗi cà phê viết chung một quy trình bán hàng cho mọi chi nhánh: nhận order, pha “cà phê của quán”, giao cho khách. Mỗi chi nhánh chỉ tự điền bước pha — chi nhánh Milan pha espresso, chi nhánh Hà Nội pha phin. Quy trình không hề gọi tên đồ uống; bạn bước vào chi nhánh nào thì chi nhánh đó quyết định món được làm ra.'
   },
   whenToUse: [
     {

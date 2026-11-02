@@ -1,15 +1,11 @@
-import { getModuleById } from '@/lib/modules/registry';
-import { ModuleLabView } from '@/components/modules/ModuleLabView';
-import { notFound } from 'next/navigation';
+import { DockerHub } from '@/components/docker/DockerCourse';
 
 export const metadata = {
-  title: 'Docker & Containerization — Visual Engineering Lab',
-  description: 'Linux Namespaces, Cgroups resource limits, OverlayFS layer unions, and virtual bridge networking.'
+  title: 'Docker & Containerization — From Linux Primitives to Production',
+  description:
+    '11 lessons (DOCKER-01 → DOCKER-11): VMs vs containers, namespaces & cgroups, the CLI lifecycle, image layers and build cache, production-ready images, networking, volumes, Compose, supply-chain security, resource troubleshooting and the registry workflow.'
 };
 
-export default function DockerModulePage() {
-  const mod = getModuleById('docker-containers');
-  if (!mod) notFound();
-
-  return <ModuleLabView module={mod} />;
+export default function DockerPage() {
+  return <DockerHub />;
 }
