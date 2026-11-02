@@ -47,13 +47,13 @@ export function PatternCanvas({
     square: 'aspect-square',
     video: 'aspect-[16/10]',
     wide: 'aspect-[2/1]',
-    auto: ''
+    auto: 'flex-1 min-h-0 h-full'
   }[aspect];
 
   return (
     <figure
       className={cn(
-        'group relative isolate border-hairline bg-surface',
+        'group relative isolate border-hairline bg-surface flex flex-col',
         'shadow-editorial dark:shadow-editorial-dark',
         className
       )}

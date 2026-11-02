@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Fraunces, Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
+import 'katex/dist/katex.min.css';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import { LocaleProvider } from '@/components/LocaleProvider';
 import { SearchProvider } from '@/components/SearchProvider';
@@ -10,6 +11,7 @@ import { Nav } from '@/components/Nav';
 import { Footer } from '@/components/Footer';
 import { RouteTransition } from '@/components/RouteTransition';
 import { BlueprintGrid } from '@/components/BlueprintGrid';
+import { CourseSwitcherFab } from '@/components/CourseSwitcherFab';
 
 const fraunces = Fraunces({
   subsets: ['latin'],
@@ -57,6 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                       <RouteTransition>{children}</RouteTransition>
                     </main>
                     <Footer />
+                    <CourseSwitcherFab />
                   </div>
                 </ProgressProvider>
               </MotionConfigProvider>

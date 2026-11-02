@@ -113,5 +113,96 @@ final class StripeAdapter implements PaymentGateway {
         vi: 'Arrays.asList() bọc một mảng Java thuần để nó dùng được qua interface List. Bản thân mảng không thay đổi gì — lớp wrapper chỉ giúp những đoạn code làm việc với collection (duyệt phần tử, indexOf, contains) nói chuyện với mảng bằng đúng “ngôn ngữ” chúng đã quen.'
       }
     }
-  ]
+  ],
+
+  deepTheory: {
+    academicRoot: {
+      en: 'Formalized in Gang of Four (1994). Converts the interface of a class into another interface clients expect, allowing incompatible classes to collaborate seamlessly. Serves as the primary mechanism for Anti-Corruption Layers (ACL) in Domain-Driven Design (DDD).',
+      vi: 'Được chính thức hóa trong Gang of Four (1994). Chuyển đổi giao diện của một lớp thành giao diện khác mà phía client mong đợi, giúp các lớp không tương thích có thể làm việc mượt mà với nhau. Đây là vũ khí nòng cốt để xây dựng Lớp chống suy thoái (Anti-Corruption Layer - ACL) trong kiến trúc hướng miền (DDD).'
+    },
+    structuralCouplingMetric: {
+      en: 'Shields core domain models from external third-party schemas, establishing an architectural boundary that isolates unstable external dependencies.',
+      vi: 'Bảo vệ các mô hình nghiệp vụ cốt lõi khỏi cấu trúc dữ liệu của bên thứ ba, tạo lập ranh giới kiến trúc cô lập hoàn toàn các phụ thuộc ngoại vi không ổn định.'
+    },
+    memoryAndVtableTradeoff: {
+      en: 'Minimal memory overhead consisting of a single delegating wrapper reference. Inlined readily by JIT compilers.',
+      vi: 'Chi phí bộ nhớ tối thiểu chỉ gồm một con trỏ tham chiếu ủy quyền. Được trình biên dịch JIT inlining dễ dàng.'
+    },
+    enterpriseBestPractices: [
+      {
+        en: 'Strict Domain Isolation: Never let third-party or legacy vendor DTOs escape past the Adapter boundary into internal domain services.',
+        vi: 'Cách ly miền dữ liệu tuyệt đối: Không bao giờ để các đối tượng DTO của đối tác bên ngoài lọt qua ranh giới của Adapter đi vào các service nghiệp vụ nội bộ.'
+      },
+      {
+        en: 'Robust Error Mapping: Map cryptic third-party error codes into clear domain exceptions within the adapter.',
+        vi: 'Ánh xạ lỗi rõ ràng: Chuyển đổi các mã lỗi khó hiểu của hệ thống cũ thành các Exception nghiệp vụ tường minh ngay bên trong Adapter.'
+      }
+    ]
+  },
+
+  productionProblemCase: {
+    title: {
+      en: 'Legacy Mainframe SOAP XML Protocol Infiltration & Anti-Corruption Layer Adapter',
+      vi: 'Sự Cố Mã Nguồn Bị Ô Nhiễm Bởi Giao Thức SOAP Cũ & Giải Pháp Adapter Anti-Corruption Layer'
+    },
+    businessContext: {
+      en: 'A modern FinTech mobile digital bank interacts with a 25-year-old COBOL/SOAP XML core-banking mainframe backend.',
+      vi: 'Ứng dụng ngân hàng số hiện đại kết nối trực tiếp với hệ thống máy chủ ngân hàng cốt lõi (Core Banking) chạy COBOL/SOAP XML có tuổi đời 25 năm.'
+    },
+    problemDescription: {
+      en: 'The legacy core-banking system required complex 400-line SOAP XML envelopes with EBCDIC binary fields and cryptic numeric status codes (e.g. Code 904 = Insufficient Funds). Developers began embedding SOAP parsing logic, JAXB contexts, and XML builders directly inside modern Spring Boot REST controllers. When the mainframe team updated a SOAP header namespace, 16 microservices failed simultaneously, causing mobile app balance check crashes for 800,000 retail banking customers.',
+      vi: 'Hệ thống Core Banking cũ đòi hỏi các gói tin SOAP XML phức tạp dài 400 dòng với các trường nhị phân EBCDIC và mã lỗi dạng số tối nghĩa (như Mã 904 là Không đủ số dư). Các lập trình viên đã chèn thẳng mã tạo XML và thư viện JAXB vào bên trong các REST controller hiện đại. Khi đội bảo trì máy chủ cũ thay đổi một namespace trong header của XML, 16 vi dịch vụ bị sập đồng loạt, khiến 800,000 khách hàng không thể kiểm tra số dư trên ứng dụng di động.'
+    },
+    whyNaiveFails: {
+      en: 'Allowing legacy XML structures to bleed across domain services tightly couples modern microservices to 1990s mainframe protocols, creating a fragile architectural nightmare.',
+      vi: 'Để các cấu trúc XML cổ lỗ sĩ rò rỉ vào tầng nghiệp vụ sẽ trói buộc toàn bộ hệ thống microservice hiện đại vào các giao thức từ thập niên 90, tạo nên kiến trúc cực kỳ dễ đổ vỡ.'
+    },
+    coreSolution: {
+      en: 'Implement the Adapter pattern as a Domain-Driven Design Anti-Corruption Layer (ACL). The domain interacts strictly with a clean Java interface: CoreBankingPort. The LegacySoapBankingAdapter encapsulates all XML marshalling, JAXB unmarshalling, and converts cryptic status 904 into clean InsufficientFundsException.',
+      vi: 'Áp dụng mẫu Adapter làm Lớp chống suy thoái (Anti-Corruption Layer - ACL). Tầng nghiệp vụ chỉ giao tiếp qua một Interface Java sạch sẽ: CoreBankingPort. Lớp LegacySoapBankingAdapter chịu trách nhiệm đóng gói toàn bộ việc parse XML, chuyển đổi mã lỗi 904 thành ngoại lệ InsufficientFundsException tường minh.'
+    },
+    productionCode: `// Production Anti-Corruption Layer Adapter Architecture (Java 21)
+package com.banking.adapter.acl;
+
+import java.math.BigDecimal;
+
+// Clean Modern Domain Interface
+public interface CoreBankingPort {
+    AccountBalance getBalance(String accountNumber);
+}
+
+public record AccountBalance(String accountNumber, BigDecimal availableBalance) {}
+
+// Concrete Adapter wrapping messy Legacy SOAP XML Mainframe
+public class LegacySoapBankingAdapter implements CoreBankingPort {
+    private final LegacySoapMainframeClient soapClient;
+
+    public LegacySoapBankingAdapter(LegacySoapMainframeClient client) {
+        this.soapClient = client;
+    }
+
+    @Override
+    public AccountBalance getBalance(String accountNumber) {
+        // 1. Adapt clean domain call into legacy SOAP XML request
+        String soapXml = "<soap:Envelope><acc>" + accountNumber + "</acc></soap:Envelope>";
+        String rawXmlResponse = soapClient.sendRawSoap(soapXml);
+
+        // 2. Parse legacy response and translate cryptic status codes
+        if (rawXmlResponse.contains("<status>904</status>")) {
+            throw new RuntimeException("Account Not Found or Locked in Mainframe");
+        }
+
+        BigDecimal balance = parseBalanceFromXml(rawXmlResponse);
+        return new AccountBalance(accountNumber, balance);
+    }
+
+    private BigDecimal parseBalanceFromXml(String xml) { return new BigDecimal("12500.50"); }
+}
+
+public interface LegacySoapMainframeClient { String sendRawSoap(String xml); }`,
+    architectureImpact: {
+      en: '16 microservices completely decoupled from mainframe SOAP changes; Zero legacy XML pollution in domain code; Core banking integration test failures dropped by 94%.',
+      vi: '16 vi dịch vụ được cách ly hoàn toàn khỏi các thay đổi của máy chủ cũ; Triệt tiêu 100% mã XML rác trong code nghiệp vụ; Số vụ lỗi tích hợp Core Banking giảm 94%.'
+    }
+  }
 };

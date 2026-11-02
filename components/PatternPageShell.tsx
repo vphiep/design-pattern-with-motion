@@ -42,7 +42,7 @@ function parseStepParam(val: string | null, maxSteps: number): number | null {
 
 export function PatternPageShell({ pattern, illustration, children }: PatternPageShellProps) {
   const { markVisited, isVisited } = useProgress();
-  const { ui, tx } = useLocale();
+  const { ui, tx, locale } = useLocale();
   const searchParams = useSearchParams();
   const meta = SCENE_META[pattern.id];
   const maxSteps = meta?.steps.length ?? pattern.steps.length;
@@ -446,6 +446,116 @@ export function PatternPageShell({ pattern, illustration, children }: PatternPag
           }
         />
       </section>
+
+      {/* Deep Architectural Theory & Coupling Mechanics */}
+      {pattern.deepTheory && (
+        <section className="mx-auto max-w-wide px-6 pb-16">
+          <div className="mb-6 border-b border-border-soft pb-4">
+            <p className="caption text-accent">ARCHITECTURAL FOUNDATIONS</p>
+            <h2 className="text-display text-display-md mt-1">
+              {locale === 'vi' ? 'Bản Chất Lý Thuyết & Đánh Đổi Kiến Trúc' : 'Deep Architectural Theory & Trade-Offs'}
+            </h2>
+            <p className="mt-2 max-w-reading text-sm text-text-muted">
+              {tx(pattern.deepTheory.academicRoot)}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="border-hairline bg-surface p-6 space-y-3">
+              <p className="caption text-accent">{locale === 'vi' ? 'Chỉ số liên kết (Coupling Metrics)' : 'Coupling & Instability Metrics'}</p>
+              <p className="text-sm leading-relaxed text-text">
+                {tx(pattern.deepTheory.structuralCouplingMetric)}
+              </p>
+            </div>
+
+            <div className="border-hairline bg-surface p-6 space-y-3">
+              <p className="caption">{locale === 'vi' ? 'Chi phí bộ nhớ & Con trỏ vtable' : 'Memory Overhead & vtable Dispatch'}</p>
+              <p className="text-sm leading-relaxed text-text">
+                {tx(pattern.deepTheory.memoryAndVtableTradeoff)}
+              </p>
+            </div>
+          </div>
+
+          {pattern.deepTheory.enterpriseBestPractices.length > 0 && (
+            <div className="mt-6 border-hairline bg-surface p-6">
+              <p className="caption text-accent mb-3">{locale === 'vi' ? 'Nguyên tắc vàng áp dụng trong Enterprise' : 'Enterprise Golden Rules'}</p>
+              <ul className="space-y-2.5">
+                {pattern.deepTheory.enterpriseBestPractices.map((rule, rIdx) => (
+                  <li key={rIdx} className="flex items-start gap-2.5 text-sm text-text-muted">
+                    <span className="h-1.5 w-1.5 rounded-full bg-accent shrink-0 mt-2" />
+                    <span>{tx(rule)}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </section>
+      )}
+
+      {/* Classic Production Problem & Architecture Solution */}
+      {pattern.productionProblemCase && (
+        <section className="mx-auto max-w-wide px-6 pb-16">
+          <div className="mb-6 border-b border-border-soft pb-4">
+            <div className="inline-flex items-center gap-1.5 border border-accent/40 bg-accent/10 px-3 py-1 font-mono text-[11px] font-bold text-accent mb-2">
+              <span>{locale === 'vi' ? 'BÀI TOÁN KINH ĐIỂN TRONG PROJECT THẬT' : 'CLASSIC PRODUCTION PROBLEM CASE STUDY'}</span>
+            </div>
+            <h2 className="text-display text-display-md mt-1">
+              {tx(pattern.productionProblemCase.title)}
+            </h2>
+            <p className="mt-2 text-sm text-text-muted font-mono">
+              <strong>{locale === 'vi' ? 'Bối cảnh thực tế: ' : 'Production Scenario: '}</strong>
+              {tx(pattern.productionProblemCase.businessContext)}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="border border-rose-500/30 bg-rose-500/5 p-6 space-y-3">
+              <p className="caption text-rose-500 font-bold">
+                {locale === 'vi' ? 'Sai Lầm Ngây Thơ & Hậu Quả Production' : 'Naive Pitfall & Production Crash'}
+              </p>
+              <p className="text-sm leading-relaxed text-text">
+                {tx(pattern.productionProblemCase.whyNaiveFails)}
+              </p>
+            </div>
+
+            <div className="border border-emerald-500/30 bg-emerald-500/5 p-6 space-y-3">
+              <p className="caption text-emerald-500 font-bold">
+                {locale === 'vi' ? 'Cách Pattern Giải Quyết Triệt Để' : 'Architectural Pattern Solution'}
+              </p>
+              <p className="text-sm leading-relaxed text-text">
+                {tx(pattern.productionProblemCase.coreSolution)}
+              </p>
+            </div>
+          </div>
+
+          {pattern.productionProblemCase.productionCode && (
+            <div className="mt-6 border-hairline overflow-hidden bg-bg">
+              <div className="border-b border-border-soft px-4 py-2 bg-surface flex items-center justify-between">
+                <span className="font-mono text-xs text-text font-bold">
+                  {locale === 'vi' ? 'Mã Nguồn Giải Pháp Chuẩn Production' : 'Production Solution Code'}
+                </span>
+                <span className="font-mono text-[10px] text-accent font-bold uppercase">Enterprise Standard</span>
+              </div>
+              <CodeBlock
+                code={pattern.productionProblemCase.productionCode}
+                language="java"
+                filename={`${pattern.id}.production.java`}
+              />
+            </div>
+          )}
+
+          <div className="mt-6 border border-emerald-500/40 bg-emerald-500/10 p-5 font-mono text-xs text-text flex items-center gap-3">
+            <div>
+              <strong className="text-emerald-500 block mb-1">
+                {locale === 'vi' ? 'Chỉ số đo lường hiệu năng & Lợi ích kiến trúc: ' : 'Architectural Benchmark & Production Impact: '}
+              </strong>
+              <span className="text-text-muted text-xs">
+                {tx(pattern.productionProblemCase.architectureImpact)}
+              </span>
+            </div>
+          </div>
+        </section>
+      )}
 
       <nav className="mx-auto flex max-w-wide items-stretch justify-between gap-4 border-t border-border-soft px-6 py-8">
         {prev ? (

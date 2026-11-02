@@ -152,5 +152,106 @@ final class XmlToYamlPipeline extends DataPipeline {
 //     () -> System.out.println("CSV -> JSON"),
 //     () -> System.out.println("writing JSON file")
 // ).run();`
+  },
+
+  deepTheory: {
+    academicRoot: {
+      en: 'Formalized in Gang of Four (1994). Defines the skeleton of an algorithm in a base class method, deferring concrete steps to subclasses without altering the overall algorithm structure. Implements the foundational Hollywood Principle: "Don\'t call us, we\'ll call you."',
+      vi: 'Được chính thức hóa trong Gang of Four (1994). Định nghĩa khung sườn của một thuật toán trong phương thức của lớp cha, nhường quyền cài đặt các bước chi tiết cho lớp con mà không làm thay đổi cấu trúc tổng thể. Hiện thực hóa nguyên lý Hollywood kinh điển: "Đừng gọi chúng tôi, chúng tôi sẽ gọi bạn."'
+    },
+    structuralCouplingMetric: {
+      en: 'Inverts control flow: the abstract superclass orchestrates execution ordering, preventing subclasses from accidentally bypassing mandatory audit, transaction, or security steps.',
+      vi: 'Đảo ngược luồng điều khiển: lớp cha trừu tượng nắm quyền điều phối thứ tự thực thi, ngăn chặn tuyệt đối việc lớp con vô tình bỏ qua các bước kiểm toán, bảo mật hoặc giao dịch bắt buộc.'
+    },
+    memoryAndVtableTradeoff: {
+      en: 'Template method is marked final, enabling HotSpot JIT C2 to inline the algorithm skeleton directly into caller code.',
+      vi: 'Phương thức khuôn mẫu được đánh dấu final, cho phép trình biên dịch HotSpot JIT C2 inlining trực tiếp khung thuật toán vào nơi gọi mà không tốn chi phí gọi hàm.'
+    },
+    enterpriseBestPractices: [
+      {
+        en: 'Enforce Immutability on Template Methods: Always declare the template method public final to prevent subclasses from overriding the execution skeleton.',
+        vi: 'Khóa chặt phương thức khuôn mẫu: Luôn khai báo phương thức template là public final để cấm lớp con ghi đè làm thay đổi khung quy trình chuẩn.'
+      },
+      {
+        en: 'Hook Methods: Provide protected empty or default hook methods allowing subclasses optional extension points without mandatory implementation.',
+        vi: 'Phương thức Hook: Cung cấp các hàm hook protected có cài đặt mặc định để lớp con có thể tùy chọn can thiệp mà không bắt buộc phải viết mã.'
+      }
+    ]
+  },
+
+  productionProblemCase: {
+    title: {
+      en: 'Data Ingestion ETL Pipeline Compliance Bypass & PII Leakage Disaster',
+      vi: 'Sự Cố Rò Rỉ Dữ Liệu Cá Nhân PII Do Bỏ Sót Bước Kiểm Toán Trong Đường Ống ETL'
+    },
+    businessContext: {
+      en: 'An enterprise data warehousing platform ingests high-volume data feeds (CSV, Parquet, JSON) from 60 banking partners under strict GDPR and PCI-DSS compliance regulations.',
+      vi: 'Nền tảng kho dữ liệu doanh nghiệp tiếp nhận dữ liệu lớn (CSV, Parquet, JSON) từ 60 đối tác ngân hàng dưới quy định tuân thủ nghiêm ngặt của GDPR và PCI-DSS.'
+    },
+    problemDescription: {
+      en: 'Developers created independent ingestion pipeline classes for each file format: CsvPipeline, JsonPipeline, ParquetPipeline. Each class duplicated common workflow logic: opening transactions, parsing records, masking Personally Identifiable Information (PII), and recording audit hashes. When an engineer implemented ParquetPipeline, they omitted the PII masking and audit logging steps to "improve throughput". Over 3 months, 4,500,000 unmasked customer credit card numbers and national identity IDs were written to public analytical tables, triggering a massive regulatory GDPR violation and a $1,200,000 penalty.',
+      vi: 'Nhóm phát triển viết các lớp đường ống xử lý độc lập cho từng định dạng file: CsvPipeline, JsonPipeline, ParquetPipeline. Mỗi lớp tự sao chép lại các bước giống nhau: mở transaction, phân tích file, che giấu thông tin cá nhân (PII) và ghi log kiểm toán. Khi một kỹ sư viết ParquetPipeline, họ đã tự ý bỏ qua bước che giấu PII và ghi log để "tối ưu tốc độ". Suốt 3 tháng, hơn 4,500,000 số thẻ tín dụng và số CCCD không hề được che giấu đã bị ghi thẳng vào kho dữ liệu phân tích công khai, dẫn đến vi phạm nghiêm trọng luật GDPR và án phạt 1,200,000 USD.'
+    },
+    whyNaiveFails: {
+      en: 'Relying on human memory or copy-pasting mandatory compliance steps across dozens of independent classes inevitably fails due to developer shortcuts or oversight.',
+      vi: 'Trông chờ vào trí nhớ của lập trình viên hoặc sao chép mã nguồn các bước tuân thủ bảo mật chắc chắn sẽ dẫn đến thảm họa do sự cẩu thả hoặc chủ quan của con người.'
+    },
+    coreSolution: {
+      en: 'Implement the Template Method pattern: AbstractDataIngestionPipeline defines public final void executePipeline(). It orchestrates the immutable sequence: openTransaction() -> extract() -> maskPii() -> load() -> auditLog() -> commit(). The maskPii() and auditLog() steps are marked private final in the base class, making compliance omission physically impossible for subclasses.',
+      vi: 'Áp dụng mẫu Template Method: AbstractDataIngestionPipeline định nghĩa public final void executePipeline(). Nó ấn định thứ tự bất biến: mở transaction -> trích xuất dữ liệu -> che PII -> nạp dữ liệu -> ghi kiểm toán -> commit. Các bước che PII và ghi kiểm toán được đánh dấu private final trong lớp cha, khiến việc bỏ sót bước tuân thủ trở thành điều bất khả thi đối với các lớp con.'
+    },
+    productionCode: `// Production Compliance-Guaranteed ETL Pipeline via Template Method (Java 21)
+package com.analytics.etl.template;
+
+import java.util.List;
+
+public abstract class AbstractDataIngestionPipeline {
+
+    // 1. FINAL SKELETON: Subclasses CANNOT alter or bypass the execution order!
+    public final void executePipeline(String sourcePath) {
+        System.out.println("--- Starting Ingestion Pipeline: " + sourcePath + " ---");
+        List<String> rawRecords = extractData(sourcePath);
+        
+        // 2. MANDATORY COMPLIANCE: Hardcoded in base class, impossible to omit!
+        List<String> sanitizedRecords = maskPiiData(rawRecords);
+        
+        loadIntoWarehouse(sanitizedRecords);
+        
+        // 3. MANDATORY AUDIT: Enforced automatically
+        recordAuditLog(sourcePath, sanitizedRecords.size());
+        System.out.println("--- Ingestion Completed Successfully ---");
+    }
+
+    // Primitive operations deferred to specialized subclasses
+    protected abstract List<String> extractData(String path);
+    protected abstract void loadIntoWarehouse(List<String> data);
+
+    // Immutable compliance steps enforced in base class
+    private List<String> maskPiiData(List<String> records) {
+        return records.stream()
+            .map(r -> r.replaceAll("(\\d{4}-){3}\\d{4}", "XXXX-XXXX-XXXX-XXXX"))
+            .toList();
+    }
+
+    private void recordAuditLog(String path, int count) {
+        System.out.println("Audit logged: " + count + " records processed from " + path);
+    }
+}
+
+// Subclasses only specify their unique extraction format!
+public class ParquetDataIngestionPipeline extends AbstractDataIngestionPipeline {
+    @Override
+    protected List<String> extractData(String path) {
+        return List.of("Card: 4111-2222-3333-4444, Amount: 100USD");
+    }
+    @Override
+    protected void loadIntoWarehouse(List<String> data) {
+        System.out.println("Writing to analytical Lakehouse: " + data);
+    }
+}`,
+    architectureImpact: {
+      en: 'Zero compliance bypass or PII leakage incidents; Critical audit and masking steps enforced 100% by the compiler; Format onboarding time dropped from 4 days to 2 hours.',
+      vi: 'Triệt tiêu 100% nguy cơ bỏ sót quy trình tuân thủ và rò rỉ dữ liệu PII; Các bước che giấu dữ liệu được trình biên dịch áp đặt tuyệt đối; Thời gian viết pipeline cho định dạng mới giảm từ 4 ngày xuống còn 2 giờ.'
+    }
   }
 };

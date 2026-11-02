@@ -240,6 +240,18 @@
   box-shadow: inset 3px 0 0 var(--accent);
 }
 
+/* KaTeX math typography customization */
+.katex-math-container {
+  color: inherit;
+}
+.katex-math-container .katex {
+  font-size: 1.15em;
+  color: inherit;
+}
+.katex-math-container .katex-display {
+  margin: 0.25em 0;
+}
+
 /* Reduce motion respect */
 @media (prefers-reduced-motion: reduce) {
   *,

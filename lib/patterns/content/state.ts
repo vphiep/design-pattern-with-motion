@@ -143,5 +143,106 @@ final class Connection {
     public String close() { String msg = state == Conn.OPEN ? "Closing" : "Already closed"; state = state.close(); return msg; }
     public String send(String data) { return state.send(data); }
 }`
+  },
+
+  deepTheory: {
+    academicRoot: {
+      en: 'Formalized in Gang of Four (1994). Allows an object to alter its behavior when its internal state changes, appearing to change its class. Encapsulates state-specific logic into separate polymorphic classes, eliminating massive switch-case statements.',
+      vi: 'Được chính thức hóa trong Gang of Four (1994). Cho phép một đối tượng thay đổi hành vi khi trạng thái nội bộ của nó thay đổi, trông như thể nó vừa đổi lớp. Đóng gói logic của từng trạng thái vào các lớp đa hình riêng biệt, xóa bỏ hoàn toàn các khối switch-case khổng lồ.'
+    },
+    structuralCouplingMetric: {
+      en: 'Decouples context from state-specific business rules. New states can be added without modifying existing state classes, obeying the Open-Closed Principle.',
+      vi: 'Tách rời ngữ cảnh khỏi các quy tắc nghiệp vụ của từng trạng thái. Có thể bổ sung thêm trạng thái mới mà không cần chỉnh sửa các lớp trạng thái cũ, tuân thủ nguyên lý Đóng/Mở.'
+    },
+    memoryAndVtableTradeoff: {
+      en: 'State transitions involve simple reference reassignment. Stateless states can be shared singletons, incurring zero allocation churn.',
+      vi: 'Chuyển đổi trạng thái chỉ tốn một phép gán lại con trỏ tham chiếu. Các trạng thái không trạng thái có thể dùng chung Singleton, không hề sinh rác trên Heap.'
+    },
+    enterpriseBestPractices: [
+      {
+        en: 'Strict Illegal Transition Enforcement: State base classes should throw IllegalStateException by default for unsupported actions, preventing unauthorized lifecycle jumps.',
+        vi: 'Ngăn chặn chuyển trạng thái trái phép: Lớp cơ sở của trạng thái nên ném IllegalStateException mặc định cho các hành động không được hỗ trợ để chống việc nhảy cóc trạng thái.'
+      },
+      {
+        en: 'Persistence Awareness: Map polymorphic state instances to database status strings cleanly during repository persistence.',
+        vi: 'Ánh xạ lưu trữ sạch sẽ: Ánh xạ chuẩn xác giữa các đối tượng trạng thái đa hình với chuỗi trạng thái trong database khi lưu xuống cơ sở dữ liệu.'
+      }
+    ]
+  },
+
+  productionProblemCase: {
+    title: {
+      en: 'E-Commerce Order Lifecycle Illegal Transition Exploit & Fraudulent Refund Loss',
+      vi: 'Lỗ Hổng Nhảy Cóc Trạng Thái Đơn Hàng & Thất Thoát 180,000 USD Tiền Hoàn Trả Gian Lận'
+    },
+    businessContext: {
+      en: 'An e-commerce marketplace manages order lifecycles across 6 stages: Created -> Paid -> Packing -> Shipped -> Delivered -> Refunded.',
+      vi: 'Sàn thương mại điện tử quản lý vòng đời đơn hàng qua 6 giai đoạn: Khởi tạo -> Đã thanh toán -> Đang đóng gói -> Đang giao -> Đã giao -> Hoàn tiền.'
+    },
+    problemDescription: {
+      en: 'Order state was maintained via a plain string column with procedural helper methods: if (order.getStatus().equals("PAID")). A malicious customer discovered an un-validated webhook endpoint that permitted calling refund() on orders that were already marked "DELIVERED". Because procedural validation omitted checking the DELIVERED status, the system refunded the customer $180,000 across 200 orders while the customer kept the delivered luxury electronics!',
+      vi: 'Trạng thái đơn hàng được quản lý bằng một cột chuỗi đơn giản kèm các hàm kiểm tra thủ công: if (order.getStatus().equals("PAID")). Một khách hàng gian lận đã phát hiện ra endpoint webhook thiếu thẩm định, cho phép gọi hàm refund() trên các đơn hàng đã ở trạng thái "DELIVERED" (Đã nhận hàng). Do logic thủ công bỏ sót việc kiểm tra trạng thái DELIVERED, hệ thống đã tự động hoàn tiền 180,000 USD cho hơn 200 đơn hàng trong khi khách vẫn ung dung giữ trọn các món đồ điện tử đắt tiền!'
+    },
+    whyNaiveFails: {
+      en: 'Managing 6 states and 10 actions with procedural string checks creates 60 conditional branches where missing a single defensive check creates critical business vulnerabilities.',
+      vi: 'Quản lý 6 trạng thái và 10 hành động bằng câu lệnh if-else tạo ra 60 nhánh rẽ điều kiện; chỉ cần sơ suất bỏ quên 1 nhánh kiểm tra là đủ tạo ra lỗ hổng bảo mật chết người.'
+    },
+    coreSolution: {
+      en: 'Implement the State pattern with a sealed interface. The Order delegates operations (pay(), ship(), refund()) to the active OrderState polymorphic class. In DeliveredState, calling refund() throws an immediate UnsupportedOperationException unless an explicit ReturnRequested state is traversed first.',
+      vi: 'Áp dụng mẫu State bằng Sealed Interface trong Java 21. Lớp Order ủy quyền các hành động (pay, ship, refund) cho đối tượng OrderState hiện tại. Trong DeliveredState, hành động refund() sẽ lập tức bị chặn đứng và ném lỗi, trừ khi đơn hàng đã đi qua bước trung gian Yêu cầu trả hàng hợp lệ.'
+    },
+    productionCode: `// Production Safe State Machine Architecture for Order Lifecycles (Java 21)
+package com.ecommerce.order.state;
+
+public interface OrderState {
+    void pay(OrderContext ctx);
+    void ship(OrderContext ctx);
+    void refund(OrderContext ctx);
+    String name();
+}
+
+public class OrderContext {
+    private OrderState state = new CreatedState();
+    public void setState(OrderState state) { this.state = state; }
+    public void pay() { state.pay(this); }
+    public void ship() { state.ship(this); }
+    public void refund() { state.refund(this); }
+    public String getStatus() { return state.name(); }
+}
+
+public class CreatedState implements OrderState {
+    @Override public void pay(OrderContext ctx) { ctx.setState(new PaidState()); }
+    @Override public void ship(OrderContext ctx) { throw new IllegalStateException("Cannot ship unpaid order!"); }
+    @Override public void refund(OrderContext ctx) { throw new IllegalStateException("Order not paid yet!"); }
+    @Override public String name() { return "CREATED"; }
+}
+
+public class PaidState implements OrderState {
+    @Override public void pay(OrderContext ctx) { throw new IllegalStateException("Already paid!"); }
+    @Override public void ship(OrderContext ctx) { ctx.setState(new ShippedState()); }
+    @Override public void refund(OrderContext ctx) { ctx.setState(new RefundedState()); }
+    @Override public String name() { return "PAID"; }
+}
+
+public class ShippedState implements OrderState {
+    @Override public void pay(OrderContext ctx) { throw new IllegalStateException("Already paid!"); }
+    @Override public void ship(OrderContext ctx) { throw new IllegalStateException("Already in transit!"); }
+    // STRICT DEFENSE: Direct refund while shipped is completely illegal!
+    @Override public void refund(OrderContext ctx) { 
+        throw new IllegalStateException("Cannot refund order in transit! Must initiate return after delivery."); 
+    }
+    @Override public String name() { return "SHIPPED"; }
+}
+
+public class RefundedState implements OrderState {
+    @Override public void pay(OrderContext ctx) { throw new IllegalStateException("Terminal state"); }
+    @Override public void ship(OrderContext ctx) { throw new IllegalStateException("Terminal state"); }
+    @Override public void refund(OrderContext ctx) { throw new IllegalStateException("Already refunded"); }
+    @Override public String name() { return "REFUNDED"; }
+}`,
+    architectureImpact: {
+      en: 'Illegal lifecycle transition exploits dropped to 0; State transitions are self-documenting and mathematically provable; Complete elimination of procedural string-comparison bugs.',
+      vi: 'Triệt tiêu 100% lỗ hổng nhảy cóc trạng thái gian lận; Mọi bước chuyển trạng thái đều tường minh và được kiểm soát chặt chẽ; Xóa bỏ hoàn toàn các lỗi so sánh chuỗi thủ công.'
+    }
   }
 };

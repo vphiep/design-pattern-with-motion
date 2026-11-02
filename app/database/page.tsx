@@ -1,15 +1,10 @@
-import { getModuleById } from '@/lib/modules/registry';
-import { ModuleLabView } from '@/components/modules/ModuleLabView';
-import { notFound } from 'next/navigation';
+import { DatabaseHubExperience } from '@/components/database/DatabaseHubExperience';
 
 export const metadata = {
-  title: 'Database Internals & Storage — Visual Engineering Lab',
-  description: 'B-Tree traversal, LSM-Tree compaction, MVCC concurrency, and write-ahead logs (WAL).'
+  title: 'Database Internals & Storage — Architecture & Motion Visualizer',
+  description: 'Deep dive into B+ Tree page splits, LSM-Tree SSTable compaction, MVCC Snapshot Isolation, Write-Ahead Logging (WAL), Buffer Pool eviction, and Consistent Hashing with pure Java 21.'
 };
 
-export default function DatabaseModulePage() {
-  const mod = getModuleById('database-internals');
-  if (!mod) notFound();
-
-  return <ModuleLabView module={mod} />;
+export default function DatabasePage() {
+  return <DatabaseHubExperience />;
 }

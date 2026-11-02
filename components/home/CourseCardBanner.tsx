@@ -42,6 +42,8 @@ function getCardBannerGradient(id: string): string {
       return 'linear-gradient(135deg, #7c2d12 0%, #431407 50%, #1c0a04 100%)';
     case 'database-internals':
       return 'linear-gradient(135deg, #0c4a6e 0%, #082f49 50%, #031525 100%)';
+    case 'java-core':
+      return 'linear-gradient(135deg, #881337 0%, #4c0519 50%, #1e020a 100%)';
     case 'cdc-event-driven':
       return 'linear-gradient(135deg, #064e3b 0%, #022c22 50%, #01140e 100%)';
     case 'message-queue':
@@ -129,6 +131,47 @@ function renderDomainIllustration(id: string) {
 
             <rect x="70" y="62" width="40" height="22" rx="4" fill="#0284c7" stroke="#e0f2fe" strokeWidth="1.5" />
             <text x="90" y="77" fill="#ffffff" fontSize="9" fontFamily="monospace" textAnchor="middle">25 | 30</text>
+          </g>
+        </svg>
+      );
+
+    case 'java-core':
+      // JVM Internals: CPU Core Stack + Mark Word (01 -> 00 -> 10) + Heap Eden / Metaspace
+      return (
+        <svg viewBox="0 0 280 140" className="w-full h-full max-h-40" fill="none">
+          {/* Left: JVM Stack Frames */}
+          <g transform="translate(30, 20)">
+            <rect width="80" height="95" rx="6" fill="#1c1917" stroke="#e11d48" strokeWidth="2" />
+            <text x="40" y="16" fill="#fecdd3" fontSize="8" fontFamily="monospace" textAnchor="middle" fontWeight="bold">JVM STACK</text>
+            <rect x="8" y="24" width="64" height="18" rx="3" fill="#e11d48" fillOpacity={0.25} stroke="#e11d48" />
+            <text x="40" y="36" fill="#ffffff" fontSize="7" fontFamily="monospace" textAnchor="middle">Frame: Loom</text>
+            <rect x="8" y="46" width="64" height="18" rx="3" fill="#27272a" stroke="#52525b" />
+            <text x="40" y="58" fill="#a1a1aa" fontSize="7" fontFamily="monospace" textAnchor="middle">Frame: JMM</text>
+            <rect x="8" y="68" width="64" height="18" rx="3" fill="#27272a" stroke="#52525b" />
+            <text x="40" y="80" fill="#a1a1aa" fontSize="7" fontFamily="monospace" textAnchor="middle">Frame: AQS</text>
+          </g>
+
+          {/* Pointer Arrow from Stack to Heap */}
+          <path d="M 115 50 C 130 50, 130 50, 145 50" stroke="#f43f5e" strokeWidth="2" strokeDasharray="3 2" />
+          <polygon points="148,50 142,47 142,53" fill="#f43f5e" />
+
+          {/* Right: HotSpot Object & Mark Word */}
+          <g transform="translate(150, 20)">
+            <rect width="105" height="95" rx="6" fill="#1c1917" stroke="#f43f5e" strokeWidth="2" />
+            <rect width="105" height="22" rx="6" fill="#e11d48" fillOpacity={0.3} />
+            <text x="52" y="15" fill="#fecdd3" fontSize="8" fontFamily="monospace" textAnchor="middle" fontWeight="bold">64-bit OBJECT</text>
+
+            {/* Mark Word */}
+            <rect x="8" y="28" width="89" height="26" rx="3" fill="#27272a" stroke="#e11d48" />
+            <text x="12" y="40" fill="#fecdd3" fontSize="7" fontFamily="monospace">Mark Word: 00</text>
+            <text x="12" y="49" fill="#10b981" fontSize="6" fontFamily="monospace">Thin CAS Lock</text>
+
+            {/* Klass Pointer & Fields */}
+            <rect x="8" y="58" width="89" height="15" rx="3" fill="#27272a" stroke="#52525b" />
+            <text x="52" y="69" fill="#a1a1aa" fontSize="7" fontFamily="monospace" textAnchor="middle">Klass: 32b OOPs</text>
+
+            <rect x="8" y="76" width="89" height="14" rx="3" fill="#27272a" stroke="#52525b" />
+            <text x="52" y="86" fill="#71717a" fontSize="6" fontFamily="monospace" textAnchor="middle">Fields + 8B Pad</text>
           </g>
         </svg>
       );

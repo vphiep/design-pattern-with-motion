@@ -22,6 +22,58 @@ export interface LearningModule {
 
 export const LEARNING_MODULES: LearningModule[] = [
   {
+    id: 'java-core',
+    name: 'Java Core & JVM Internals',
+    category: { en: 'Language Runtime & Systems', vi: 'Hạ tầng Ngôn ngữ & JVM' },
+    tagline: {
+      en: 'Primitives vs References, String Pool, JVM memory layout, synchronized lock inflation, AQS, and Virtual Threads.',
+      vi: 'Biến nguyên thủy vs Tham chiếu, String Pool, bộ nhớ JVM, nâng cấp khóa Monitor, AQS và Virtual Threads.'
+    },
+    description: {
+      en: 'Master low-level Java mechanics: Stack vs Heap, String immutability, OOP vtable dispatch, 64-bit object mark word, JMM happens-before, G1/ZGC, and Loom virtual threads.',
+      vi: 'Làm chủ cơ chế tầng sâu của Java: Stack vs Heap, tính bất biến String, bảng vtable OOP, 64-bit Object Mark Word, rào cản JMM happens-before, thu gom rác G1/ZGC và Virtual Threads.'
+    },
+    badgeText: {
+      en: 'Available Now · 21 Core Topics',
+      vi: 'Sẵn sàng học · 21 Chuyên đề cốt lõi'
+    },
+    status: 'available',
+    accent: '#e11d48',
+    accentSoft: '#fecdd3',
+    accentBg: 'rgba(225, 29, 72, 0.08)',
+    accentBorder: 'rgba(225, 29, 72, 0.45)',
+    href: '/java-core',
+    topicsCount: 21,
+    roadmapPhase: 1,
+    estimatedDate: { en: 'Completed (Phase 1)', vi: 'Đã hoàn thành (Giai đoạn 1)' },
+    highlights: {
+      en: [
+        'Fundamentals: JDK/JRE/JVM, HashCode & Equals, OOP Pillars, Collections, Modern Java 8-21',
+        'Multithreading Core: Thread Lifecycle, Concurrency Hazards, Lock-Free CAS, ThreadPools',
+        'JVM Memory Architecture: TLAB Eden allocation, Scavenge GC, Metaspace, Stack Frames',
+        'HotSpot Synchronized Lock Inflation: Biased -> Thin CAS on Stack -> Heavyweight Monitor',
+        'Java 21 Virtual Threads: Continuation unpark & Carrier OS Thread multiplexing',
+        'AbstractQueuedSynchronizer (AQS) state FIFO wait queue & LockSupport.park/unpark',
+        'Collections Internals: HashMap bitwise treeification & ConcurrentHashMap ForwardingNode',
+        'Level Switcher [All | Fundamentals | Advanced] + FAANG Technical Interview Q&As'
+      ],
+      vi: [
+        'Nền tảng Cốt lõi: JDK/JRE/JVM, Khế ước HashCode & Equals, 4 Trụ Cột OOP, Collections, Java 8-21',
+        'Cốt lõi Đa luồng: Vòng đời Thread, Lỗi Concurrency, Vòng lặp CAS phi khóa, ThreadPoolExecutor',
+        'Kiến trúc bộ nhớ JVM: Cấp phát TLAB Eden, Dọn dẹp Scavenge GC, Metaspace, Stack Frames',
+        'Nâng cấp khóa Synchronized: Biased -> Khóa nhẹ CAS trên Stack -> Monitor hệ điều hành',
+        'Virtual Threads Java 21: Đóng băng Continuation & Ghép kênh lên Carrier OS Thread',
+        'Bản chất AQS: Biến trạng thái nguyên tử volatile & Hàng đợi chờ FIFO',
+        'Bản chất Cấu trúc Dữ liệu: Cây hóa bitwise HashMap & ConcurrentHashMap ForwardingNode',
+        'Nút chuyển cấp độ [Tất cả | Cơ bản | Nâng cao] + Bộ câu hỏi Phỏng vấn FAANG chuyên sâu'
+      ]
+    },
+    upcomingFeatures: {
+      en: ['Interactive Bytecode Stack Machine simulator', 'JOL (Java Object Layout) byte inspector'],
+      vi: ['Mô phỏng máy ảo Bytecode Stack Machine', 'Trình soi byte nhị phân đối tượng JOL']
+    }
+  },
+  {
     id: 'design-patterns',
     name: 'Design Patterns (GoF)',
     category: { en: 'Architecture & OOP', vi: 'Kiến trúc & Hướng đối tượng' },
@@ -44,8 +96,8 @@ export const LEARNING_MODULES: LearningModule[] = [
     accentBorder: 'rgba(232, 93, 4, 0.45)',
     href: '/design-systems',
     topicsCount: 23,
-    roadmapPhase: 1,
-    estimatedDate: { en: 'Completed', vi: 'Đã hoàn thành' },
+    roadmapPhase: 2,
+    estimatedDate: { en: 'Completed (Phase 2)', vi: 'Đã hoàn thành (Giai đoạn 2)' },
     highlights: {
       en: [
         'Creational: Singleton, Factory Method, Builder, Prototype...',
@@ -76,18 +128,18 @@ export const LEARNING_MODULES: LearningModule[] = [
       vi: 'Trực quan hóa cơ chế lưu trang bộ nhớ/ổ đĩa, phân tách nút B-Tree, cấp độ cô lập giao dịch và phân mảnh sharding.'
     },
     badgeText: {
-      en: 'Phase 2 · In Development',
-      vi: 'Giai đoạn 2 · Đang phát triển'
+      en: 'Available Now · 12 Core Engines',
+      vi: 'Sẵn sàng học · 12 Kiến trúc cốt lõi'
     },
-    status: 'development',
+    status: 'available',
     accent: '#0284c7',
     accentSoft: '#bae6fd',
     accentBg: 'rgba(2, 132, 199, 0.08)',
     accentBorder: 'rgba(2, 132, 199, 0.45)',
     href: '/database',
-    topicsCount: 8,
-    roadmapPhase: 2,
-    estimatedDate: { en: 'Next Release (Phase 2)', vi: 'Bản phát hành tới (Giai đoạn 2)' },
+    topicsCount: 12,
+    roadmapPhase: 3,
+    estimatedDate: { en: 'Completed (Phase 3)', vi: 'Đã hoàn thành (Giai đoạn 3)' },
     highlights: {
       en: [
         'B-Tree Node Search & Page Splitting animation',
@@ -120,8 +172,8 @@ export const LEARNING_MODULES: LearningModule[] = [
       vi: 'Xem các thao tác ghi cơ sở dữ liệu chuyển hóa thành luồng sự kiện bảo toàn tính nhất quán sang Elasticsearch/Redis.'
     },
     badgeText: {
-      en: 'Phase 2 · In Development',
-      vi: 'Giai đoạn 2 · Đang phát triển'
+      en: 'Phase 4 · In Development',
+      vi: 'Giai đoạn 4 · Đang phát triển'
     },
     status: 'development',
     accent: '#10b981',
@@ -130,8 +182,8 @@ export const LEARNING_MODULES: LearningModule[] = [
     accentBorder: 'rgba(16, 185, 129, 0.45)',
     href: '/cdc',
     topicsCount: 6,
-    roadmapPhase: 2,
-    estimatedDate: { en: 'Phase 2', vi: 'Giai đoạn 2' },
+    roadmapPhase: 4,
+    estimatedDate: { en: 'Phase 4', vi: 'Giai đoạn 4' },
     highlights: {
       en: [
         'Transactional Outbox Pattern step simulation',
@@ -164,18 +216,18 @@ export const LEARNING_MODULES: LearningModule[] = [
       vi: 'Theo dõi gói tin qua broker, hiểu rõ ngữ nghĩa at-least-once, exactly-once và chính sách hàng đợi chết (DLQ).'
     },
     badgeText: {
-      en: 'Phase 3 · Upcoming',
-      vi: 'Giai đoạn 3 · Sắp ra mắt'
+      en: 'Phase 5 · Upcoming',
+      vi: 'Giai đoạn 5 · Sắp ra mắt'
     },
-    status: 'development',
+    status: 'upcoming',
     accent: '#8b5cf6',
     accentSoft: '#ddd6fe',
     accentBg: 'rgba(139, 92, 246, 0.08)',
     accentBorder: 'rgba(139, 92, 246, 0.45)',
     href: '/message-queue',
     topicsCount: 8,
-    roadmapPhase: 3,
-    estimatedDate: { en: 'Phase 3', vi: 'Giai đoạn 3' },
+    roadmapPhase: 5,
+    estimatedDate: { en: 'Phase 5', vi: 'Giai đoạn 5' },
     highlights: {
       en: [
         'Kafka partition offsets & consumer group rebalance',
@@ -208,8 +260,8 @@ export const LEARNING_MODULES: LearningModule[] = [
       vi: 'Khám phá bản chất thực sự của container: không phải hộp đen, mà là sự kết hợp của các cơ chế hạt nhân Linux kernel.'
     },
     badgeText: {
-      en: 'Phase 4 · Upcoming',
-      vi: 'Giai đoạn 4 · Sắp ra mắt'
+      en: 'Phase 6 · Upcoming',
+      vi: 'Giai đoạn 6 · Sắp ra mắt'
     },
     status: 'upcoming',
     accent: '#06b6d4',
@@ -218,8 +270,8 @@ export const LEARNING_MODULES: LearningModule[] = [
     accentBorder: 'rgba(6, 182, 212, 0.45)',
     href: '/docker',
     topicsCount: 7,
-    roadmapPhase: 4,
-    estimatedDate: { en: 'Phase 4', vi: 'Giai đoạn 4' },
+    roadmapPhase: 6,
+    estimatedDate: { en: 'Phase 6', vi: 'Giai đoạn 6' },
     highlights: {
       en: [
         'Linux Namespaces: PID, NET, MNT, IPC isolation',
@@ -252,8 +304,8 @@ export const LEARNING_MODULES: LearningModule[] = [
       vi: 'Từng bước kiểm chứng quy trình trao đổi khóa mã hóa, xác minh chữ ký số và phân quyền phân tán.'
     },
     badgeText: {
-      en: 'Phase 4 · Upcoming',
-      vi: 'Giai đoạn 4 · Sắp ra mắt'
+      en: 'Phase 7 · Upcoming',
+      vi: 'Giai đoạn 7 · Sắp ra mắt'
     },
     status: 'upcoming',
     accent: '#f43f5e',
@@ -262,8 +314,8 @@ export const LEARNING_MODULES: LearningModule[] = [
     accentBorder: 'rgba(244, 63, 94, 0.45)',
     href: '/modules/security',
     topicsCount: 6,
-    roadmapPhase: 4,
-    estimatedDate: { en: 'Phase 4', vi: 'Giai đoạn 4' },
+    roadmapPhase: 7,
+    estimatedDate: { en: 'Phase 7', vi: 'Giai đoạn 7' },
     highlights: {
       en: [
         'OAuth 2.0 Authorization Code with PKCE step sequence',
@@ -296,8 +348,8 @@ export const LEARNING_MODULES: LearningModule[] = [
       vi: 'Mô phỏng triển khai zero-downtime, chuyển dịch lưu lượng dần dần, cơ chế kiểm tra sức khỏe và tự động rollback.'
     },
     badgeText: {
-      en: 'Phase 4 · Upcoming',
-      vi: 'Giai đoạn 4 · Sắp ra mắt'
+      en: 'Phase 8 · Upcoming',
+      vi: 'Giai đoạn 8 · Sắp ra mắt'
     },
     status: 'upcoming',
     accent: '#f59e0b',
@@ -306,8 +358,8 @@ export const LEARNING_MODULES: LearningModule[] = [
     accentBorder: 'rgba(245, 158, 11, 0.45)',
     href: '/modules/devops',
     topicsCount: 6,
-    roadmapPhase: 4,
-    estimatedDate: { en: 'Phase 4', vi: 'Giai đoạn 4' },
+    roadmapPhase: 8,
+    estimatedDate: { en: 'Phase 8', vi: 'Giai đoạn 8' },
     highlights: {
       en: [
         'Canary Release: 90% stable vs 10% canary traffic splitting',

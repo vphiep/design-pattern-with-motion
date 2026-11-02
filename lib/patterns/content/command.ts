@@ -160,5 +160,108 @@ final class History {
         if (!stack.isEmpty()) stack.pop().undo();
     }
 }`
+  },
+
+  deepTheory: {
+    academicRoot: {
+      en: 'Formalized in Gang of Four (1994). Encapsulates a request as an object, parameterizing clients with different requests, enabling queued execution, audit logging, and reversible operations (Undo/Redo). Forms the architectural foundation for Distributed Saga orchestration in microservices.',
+      vi: 'Được chính thức hóa trong Gang of Four (1994). Đóng gói một yêu cầu thành một đối tượng độc lập, cho phép tham số hóa các yêu cầu, hỗ trợ xếp hàng thực thi, ghi nhật ký kiểm toán và khả năng hoàn tác (Undo/Redo). Đây là nền tảng kiến trúc của mô hình Saga phân tán trong vi dịch vụ.'
+    },
+    structuralCouplingMetric: {
+      en: 'Completely severs coupling between the Invoker (queue, scheduler, UI) and the Receiver (domain business entity).',
+      vi: 'Cắt đứt hoàn toàn sự gắn kết giữa đối tượng phát lệnh Invoker (hàng đợi, bộ lập lịch) và đối tượng thực thi Receiver (thực thể nghiệp vụ domain).'
+    },
+    memoryAndVtableTradeoff: {
+      en: 'Command instances retain state in Heap memory for undo operations. Ephemeral commands in high-throughput loops should be pooled or discarded immediately.',
+      vi: 'Các đối tượng Command lưu giữ trạng thái trên Heap để phục vụ hoàn tác. Các command tạm thời trong luồng tải cao cần được tái sử dụng hoặc giải phóng ngay sau khi chạy.'
+    },
+    enterpriseBestPractices: [
+      {
+        en: 'Enforce Command Idempotency: Always assign a unique idempotencyKey to each command to prevent duplicate execution during network retries.',
+        vi: 'Bảo đảm tính lũy đẳng (Idempotency): Luôn gán một mã khóa duy nhất idempotencyKey cho từng command để chống thực thi lặp lại khi có cơ chế retry mạng.'
+      },
+      {
+        en: 'Saga Compensating Transactions: Implement a compensate() method for every execute() to ensure clean rollbacks across distributed REST/gRPC boundaries.',
+        vi: 'Giao dịch đền bù Saga: Luôn cài đặt phương thức compensate() song hành với execute() để bảo đảm hoàn tác an toàn qua ranh giới các dịch vụ phân tán.'
+      }
+    ]
+  },
+
+  productionProblemCase: {
+    title: {
+      en: 'Distributed Travel Saga Booking Partial Failure & Automated Compensating Rollback',
+      vi: 'Sự Cố Đặt Vé Du Lịch Phân Tán Bị Lỗi Nửa Chừng & Cơ Chế Hoàn Tác Tự Động Bằng Mẫu Command'
+    },
+    businessContext: {
+      en: 'An online travel agency coordinates multi-step vacation bookings involving Flights, Hotel Rooms, and Car Rentals across independent third-party provider APIs.',
+      vi: 'Đại lý du lịch trực tuyến điều phối các gói đặt chỗ phức hợp gồm: Vé máy bay, Khách sạn và Thuê xe ô tô qua các API của nhiều đối tác độc lập.'
+    },
+    problemDescription: {
+      en: 'When a customer booked a vacation package, the service successfully charged $1,200 on their credit card and reserved the luxury hotel room. However, the third flight booking step failed due to sudden airline seat depletion. Because the booking pipeline was implemented with procedural HTTP calls, the system had no automated rollback mechanism! The customer was left with an unrefundable hotel room and a credit card charge for a trip they could not take, requiring 3,500 manual customer service dispute interventions per month.',
+      vi: 'Khi khách hàng đặt gói du lịch, hệ thống đã trừ thành công 1,200 USD trên thẻ tín dụng và đặt phòng khách sạn. Tuy nhiên, bước thứ ba đặt vé máy bay bị thất bại do hãng hàng không vừa hết chỗ. Do quy trình được viết bằng các lệnh HTTP thủ công rời rạc, hệ thống không có cách nào để tự động hoàn tác phòng khách sạn! Khách hàng bị mất tiền và mắc kẹt với phòng khách sạn không thể đi, tạo ra hơn 3,500 khiếu nại dịch vụ mỗi tháng buộc nhân viên phải xử lý thủ công.'
+    },
+    whyNaiveFails: {
+      en: 'Traditional ACID two-phase commit (2PC) across third-party REST APIs is impossible due to network partitions, lock holding times, and lack of XA transaction support.',
+      vi: 'Giao thức giao dịch phân tán 2PC cổ điển hoàn toàn bất khả thi trên các API REST của bên thứ ba do rào cản phân mảnh mạng, thời gian giữ khóa quá lâu và thiếu hỗ trợ chuẩn XA.'
+    },
+    coreSolution: {
+      en: 'Model each reservation step as a Saga Command implementing execute() and compensate(). The Saga Orchestrator executes commands sequentially; if any command fails, it navigates backward through executed commands, triggering compensate() to release hotel reservations and refund credit cards automatically.',
+      vi: 'Mô hình hóa từng bước đặt chỗ thành một Saga Command có 2 hàm execute() và compensate(). Bộ điều phối Saga chạy các lệnh tuần tự; nếu có bất kỳ bước nào lỗi, nó tự động duyệt ngược lại các lệnh đã hoàn thành và kích hoạt compensate() để tự hủy phòng và hoàn tiền lại vào thẻ khách hàng.'
+    },
+    productionCode: `// Production Distributed Saga Orchestrator using Command Pattern (Java 21)
+package com.travel.saga.command;
+
+import java.util.ArrayDeque;
+import java.util.Deque;
+
+public interface SagaCommand {
+    boolean execute();
+    void compensate();
+    String name();
+}
+
+public class HotelReservationCommand implements SagaCommand {
+    private final String bookingRef;
+    public HotelReservationCommand(String ref) { this.bookingRef = ref; }
+    @Override public boolean execute() { System.out.println("Hotel Reserved: " + bookingRef); return true; }
+    @Override public void compensate() { System.out.println("Cancelling Hotel: " + bookingRef); }
+    @Override public String name() { return "HotelReservation"; }
+}
+
+public class FlightBookingCommand implements SagaCommand {
+    private final boolean shouldFail;
+    public FlightBookingCommand(boolean shouldFail) { this.shouldFail = shouldFail; }
+    @Override public boolean execute() {
+        if (shouldFail) throw new RuntimeException("Flight Seats Exhausted!");
+        return true;
+    }
+    @Override public void compensate() { System.out.println("Releasing Flight Reservation"); }
+    @Override public String name() { return "FlightBooking"; }
+}
+
+public class SagaOrchestrator {
+    public boolean runSaga(java.util.List<SagaCommand> steps) {
+        Deque<SagaCommand> executed = new ArrayDeque<>();
+        for (SagaCommand step : steps) {
+            try {
+                boolean ok = step.execute();
+                if (!ok) throw new RuntimeException("Step rejected: " + step.name());
+                executed.push(step);
+            } catch (Exception e) {
+                System.err.println("Saga step failed: " + step.name() + ". Initiating Compensating Rollback!");
+                while (!executed.isEmpty()) {
+                    SagaCommand rollbackStep = executed.pop();
+                    try { rollbackStep.compensate(); } catch (Exception ignored) {}
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+}`,
+    architectureImpact: {
+      en: 'Manual customer support cancellation interventions dropped from 3,500/month to 0; Zero stranded partial bookings; 100% automated eventual consistency achieved across distributed microservices.',
+      vi: 'Số lượng khiếu nại phải xử lý thủ công giảm từ 3,500 vụ/tháng về 0; Triệt tiêu hoàn toàn tình trạng đặt chỗ dở dang; Đạt được tính nhất quán cuối cùng (Eventual Consistency) tự động 100% giữa các vi dịch vụ phân tán.'
+    }
   }
 };

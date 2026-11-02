@@ -30,6 +30,23 @@ export interface PatternAdvanced {
   javaCode: string;
 }
 
+export interface ProductionProblemCase {
+  title: LocalizedText;
+  businessContext: LocalizedText;
+  problemDescription: LocalizedText;
+  whyNaiveFails: LocalizedText;
+  coreSolution: LocalizedText;
+  productionCode?: string;
+  architectureImpact: LocalizedText;
+}
+
+export interface PatternDeepTheory {
+  academicRoot: LocalizedText;
+  structuralCouplingMetric: LocalizedText;
+  memoryAndVtableTradeoff: LocalizedText;
+  enterpriseBestPractices: LocalizedText[];
+}
+
 export interface Pattern {
   /** kebab-case identifier, e.g. 'singleton', 'factory-method' */
   id: string;
@@ -57,4 +74,8 @@ export interface Pattern {
   realSystems: RealSystemNote[];
   /** Present only when the pattern has a meaningfully different advanced form. */
   advanced?: PatternAdvanced;
+  /** In-depth software architecture theory, coupling metrics & trade-offs */
+  deepTheory?: PatternDeepTheory;
+  /** Classic production problem solved by this pattern in enterprise engineering */
+  productionProblemCase?: ProductionProblemCase;
 }

@@ -14,8 +14,7 @@ import {
   Sparkles,
   ArrowRight,
   Lock,
-  Layers,
-  CheckCircle2
+  Layers
 } from 'lucide-react';
 import { useLocale } from '@/components/LocaleProvider';
 import { useTheme } from '@/components/ThemeProvider';
@@ -35,8 +34,22 @@ export function GoogleCoursePicker() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [selectedModule, setSelectedModule] = useState<LearningModule | null>(null);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const [translateX, setTranslateX] = useState<number>(0);
+
   const total = LEARNING_MODULES.length;
   const currentModule = LEARNING_MODULES[activeIndex];
+
+  const updatePosition = useCallback((index: number) => {
+    const container = containerRef.current;
+    const card = cardRefs.current[index];
+    if (!container || !card) return;
+
+    const containerCenter = container.clientWidth / 2;
+    const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+    setTranslateX(containerCenter - cardCenter);
+  }, []);
 
   const handlePrev = useCallback(() => {
     setActiveIndex((prev) => Math.max(0, prev - 1));
@@ -58,6 +71,26 @@ export function GoogleCoursePicker() {
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [handlePrev, handleNext]);
+
+  // Re-center when activeIndex changes
+  useEffect(() => {
+    updatePosition(activeIndex);
+  }, [activeIndex, updatePosition]);
+
+  // Re-center on window resize
+  useEffect(() => {
+    const onResize = () => updatePosition(activeIndex);
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [activeIndex, updatePosition]);
+
+  // Initial centering on component mount
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      updatePosition(activeIndex);
+    }, 50);
+    return () => clearTimeout(timer);
+  }, [activeIndex, updatePosition]);
 
   const handleCardAction = (module: LearningModule) => {
     if (module.status === 'available') {
@@ -192,12 +225,24 @@ export function GoogleCoursePicker() {
           </button>
 
           {/* Horizontal Sliding Carousel Track */}
-          <div className="w-full overflow-hidden px-8 sm:px-14 py-3">
+          <div ref={containerRef} className="w-full overflow-hidden py-3">
             <motion.div
-              className="flex items-center gap-6 sm:gap-7"
+              className="flex items-center gap-6 sm:gap-7 w-max"
+              drag="x"
+              dragConstraints={{ left: 0, right: 0 }}
+              dragElastic={0.2}
+              onDragEnd={(_, info) => {
+                const swipeThreshold = 50;
+                if (info.offset.x < -swipeThreshold && activeIndex < total - 1) {
+                  handleNext();
+                } else if (info.offset.x > swipeThreshold && activeIndex > 0) {
+                  handlePrev();
+                } else {
+                  updatePosition(activeIndex);
+                }
+              }}
               animate={{
-                // Compute offset so the active card is centered or shifts smoothly
-                x: `calc(50% - ${activeIndex * 370 + 175}px)`
+                x: translateX
               }}
               transition={{
                 type: 'spring',
@@ -213,6 +258,9 @@ export function GoogleCoursePicker() {
                 return (
                   <motion.div
                     key={mod.id}
+                    ref={(el) => {
+                      cardRefs.current[index] = el;
+                    }}
                     onClick={() => {
                       if (isActive) {
                         handleCardAction(mod);
@@ -360,7 +408,7 @@ export function GoogleCoursePicker() {
         </div>
       </footer>
 
-      {/* Modal Dialog when inspecting in-development modules */}
+      {/* Modal Dialog when inspecting in-development modules (Rendered via React Portal) */}
       <ModuleDevelopmentModal
         module={selectedModule}
         onClose={() => setSelectedModule(null)}
