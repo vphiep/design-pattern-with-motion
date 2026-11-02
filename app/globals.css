@@ -1,0 +1,253 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Editorial warm neutral palette (light) */
+    --bg: #f4efe6; /* warm off-white / paper */
+    --bg-elevated: #ece6d8; /* slight tan step up */
+    --surface: #faf6ec; /* paper card surface */
+    --border: #2a221a; /* near-black for crisp hairlines */
+    --border-soft: rgba(42, 34, 26, 0.12);
+
+    --text: #1a1410; /* deep ink */
+    --text-muted: #5b5247; /* warm gray */
+    --text-soft: #8a8071; /* warmer / lighter gray */
+
+    --accent: #e85d04; /* primary orange */
+    --accent-soft: #fbd0b0; /* peach wash */
+    --accent-strong: #b34303; /* burnt orange for hover/press */
+
+    --secondary: #2a9d8f; /* muted teal */
+    --secondary-soft: #c5e5e0;
+
+    --grid-line: rgba(42, 34, 26, 0.07);
+    --grain-color: rgba(42, 34, 26, 0.045);
+
+    --pattern-creational: #e85d04;
+    --pattern-structural: #2a9d8f;
+    --pattern-behavioral: #c77b43;
+  }
+
+  .dark {
+    --bg: #0f0d0a; /* deep charcoal-brown */
+    --bg-elevated: #181410;
+    --surface: #14110d;
+    --border: #efe6d5; /* inverted: light hairline */
+    --border-soft: rgba(239, 230, 213, 0.12);
+
+    --text: #f4efe6; /* warm paper */
+    --text-muted: #b3a999;
+    --text-soft: #807766;
+
+    --accent: #f48c46; /* slightly brighter orange for dark */
+    --accent-soft: #5c2b09;
+    --accent-strong: #ffb37a;
+
+    --secondary: #5cb8aa; /* lifted teal for dark */
+    --secondary-soft: #1d3e3a;
+
+    --grid-line: rgba(239, 230, 213, 0.05);
+    --grain-color: rgba(239, 230, 213, 0.04);
+
+    --pattern-creational: #f48c46;
+    --pattern-structural: #5cb8aa;
+    --pattern-behavioral: #d99463;
+  }
+
+  * {
+    border-color: var(--border-soft);
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'ss01', 'ss02', 'cv11';
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans), system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  ::selection {
+    background: var(--accent);
+    color: var(--bg);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  code,
+  kbd,
+  pre,
+  samp {
+    font-family: var(--font-mono), monospace;
+  }
+}
+
+@layer utilities {
+  .text-display {
+    font-family: var(--font-display), Georgia, serif;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+  }
+
+  .text-mono {
+    font-family: var(--font-mono), monospace;
+  }
+
+  /* Blueprint grid texture: large + fine layered */
+  .bg-grid {
+    background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size:
+      64px 64px,
+      64px 64px;
+  }
+
+  .bg-grid-fine {
+    background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size:
+      16px 16px,
+      16px 16px;
+  }
+
+  .bg-grid-cross {
+    background-image: linear-gradient(to right, var(--grid-line) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid-line) 1px, transparent 1px);
+    background-size: 32px 32px;
+    background-position: -1px -1px;
+  }
+
+  /* Subtle paper grain overlay */
+  .grain::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background-image: url("data:image/svg+xml;utf8,<svg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.13 0 0 0 0 0.10 0 0 0 0.5 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+    background-size: 200px 200px;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+  }
+
+  .dark .grain::before {
+    mix-blend-mode: screen;
+    opacity: 0.35;
+  }
+
+  /* Editorial hairline border */
+  .border-hairline {
+    border-width: 1px;
+    border-color: var(--border);
+  }
+
+  .border-hairline-soft {
+    border-width: 1px;
+    border-color: var(--border-soft);
+  }
+
+  /* Custom underline */
+  .underline-editorial {
+    background-image: linear-gradient(transparent calc(100% - 2px), var(--accent) calc(100% - 2px));
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+
+  /* Marker / highlight brush for text */
+  .marker {
+    background: linear-gradient(180deg, transparent 55%, var(--accent-soft) 55%);
+    padding-inline: 0.15em;
+  }
+
+  /* Hand-drawn-feeling wavy underline */
+  .wave-underline {
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 80 8'><path d='M0 4 Q 10 0 20 4 T 40 4 T 60 4 T 80 4' fill='none' stroke='%23e85d04' stroke-width='2' stroke-linecap='round'/></svg>");
+    background-repeat: repeat-x;
+    background-position: 0 100%;
+    background-size: 80px 8px;
+    padding-bottom: 6px;
+  }
+
+  /* Editorial caption style */
+  .caption {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-soft);
+  }
+
+  /* Custom cursor for interactive elements */
+  .cursor-ink {
+    cursor: crosshair;
+  }
+
+  /* Motion & Animation utilities from .skills */
+  .animate-flow-dash {
+    stroke-dasharray: 6 4;
+    animation: flow-dash 1.2s linear infinite;
+  }
+
+  .animate-bounce-subtle {
+    animation: attention-bounce 1s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .animate-pulse-node {
+    animation: subtle-pulse 2s ease-in-out infinite;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-soft);
+  border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+}
+
+/* Shiki line highlight — linked to illustration steps */
+.line-highlight {
+  display: inline-block;
+  width: 100%;
+  background: color-mix(in srgb, var(--accent) 16%, transparent);
+  box-shadow: inset 3px 0 0 var(--accent);
+}
+
+/* Reduce motion respect */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
